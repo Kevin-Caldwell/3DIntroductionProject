@@ -105,7 +105,7 @@ namespace _3DIntroductionProject
 
         private void Clock_Tick(object sender, EventArgs e)
         {
-            Vector3 pos = camera.Basis.Position;
+            /*Vector3 pos = camera.Basis.Position;
 
             camera.Basis.Forward = camera.Basis.Forward.rotateZ(0.02);
             camera.Basis.Right = camera.Basis.Right.rotateZ(0.02);
@@ -113,7 +113,9 @@ namespace _3DIntroductionProject
             pos.X = Math.Cos(cameraAngle) * 5;
             pos.Y = Math.Sin(cameraAngle) * 5;
 
-            cameraAngle += 0.02;
+            cameraAngle += 0.02;*/
+
+            objects[0].Rotation[2] += 0.005;
 
             refreshDrawing();
         }
@@ -225,7 +227,7 @@ namespace _3DIntroductionProject
                 PointF[] points = new PointF[face.Vertices.Count];
                 for (int j = 0; j < face.Vertices.Count; j++)
                 {
-                    points[j] = camera.toScreen(obj.Vertices[face.Vertices[j]].convertToVector());
+                    points[j] = camera.toScreen(obj.getTransformedVertex(obj.Vertices[face.Vertices[j]]).convertToVector());
                 }
                 g.FillPolygon(new SolidBrush(Color.Blue), points);
             }
