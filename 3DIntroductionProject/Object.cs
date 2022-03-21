@@ -61,26 +61,42 @@ namespace _3DIntroductionProject
         {
             Vertex transformedVertex = new Vertex(v);
 
+            double X = v.X;
+            double Y = v.Y;
+            double Z = v.Z;
+
             // X Rotation
             double sinX = Math.Sin(Rotation[0]);
             double cosX = Math.Cos(Rotation[0]);
 
-            transformedVertex.Y *= (cosX + sinX);
-            transformedVertex.Z *= (cosX - sinX);
+            transformedVertex.Y = (Y * cosX + Z * sinX);
+            transformedVertex.Z = (-Y * sinX + Z * cosX);
+
+            X= transformedVertex.X;
+            Y=transformedVertex.Y;
+            Z=transformedVertex.Z;
 
             // Y Rotation
             double sinY = Math.Sin(Rotation[1]);
             double cosY = Math.Cos(Rotation[1]);
 
-            transformedVertex.X *= (cosY - sinY);
-            transformedVertex.Z *= (sinY + cosY);
+            transformedVertex.X = (X * cosY + Z * sinY);
+            transformedVertex.Z = (Z * cosY - X * sinY);
+
+            X = transformedVertex.X;
+            Y = transformedVertex.Y;
+            Z = transformedVertex.Z;
 
             // Z Rotation
             double sinZ = Math.Sin(Rotation[2]);
             double cosZ = Math.Cos(Rotation[2]);
 
-            transformedVertex.X *= (cosZ + sinZ);
-            transformedVertex.Y *= (cosZ - sinZ);
+            transformedVertex.X = (X * cosZ - Y * sinZ);
+            transformedVertex.Y = (X * sinZ + Y * cosZ);
+
+            X = transformedVertex.X;
+            Y = transformedVertex.Y;
+            Z = transformedVertex.Z;
 
 
             //Scaling

@@ -114,8 +114,12 @@ namespace _3DIntroductionProject
             pos.Y = Math.Sin(cameraAngle) * 5;
 
             cameraAngle += 0.02;*/
+            objects[0].Rotation[0] += 0.01;
+            objects[0].Rotation[1] += 0.01;
+            objects[0].Rotation[2] += 0.01;
 
-            objects[0].Rotation[2] += 0.005;
+            //objects[0].Scale[1] += 0.01;
+
 
             refreshDrawing();
         }
@@ -214,14 +218,14 @@ namespace _3DIntroductionProject
             {
                 Edge edge = obj.Edges[i];
                 PointF[] points = new PointF[2];
-                points[0] = camera.toScreen(obj.Vertices[edge.A].convertToVector());
-                points[1] = camera.toScreen(obj.Vertices[edge.B].convertToVector());
+                points[0] = camera.toScreen(obj.getTransformedVertex(obj.Vertices[edge.A]).convertToVector());
+                points[1] = camera.toScreen(obj.getTransformedVertex(obj.Vertices[edge.B]).convertToVector());
                 Pen pen = new Pen(Color.Tan);
                 pen.Width = 5;
                 g.DrawPolygon(pen, points);
             }
 
-            for (int i = 0; i < obj.Faces.Count; i++)
+            /*for (int i = 0; i < obj.Faces.Count; i++)
             {
                 Face face = obj.Faces[i];
                 PointF[] points = new PointF[face.Vertices.Count];
@@ -230,7 +234,7 @@ namespace _3DIntroductionProject
                     points[j] = camera.toScreen(obj.getTransformedVertex(obj.Vertices[face.Vertices[j]]).convertToVector());
                 }
                 g.FillPolygon(new SolidBrush(Color.Blue), points);
-            }
+            }*/
         }
     }
 }
