@@ -18,16 +18,7 @@ namespace _3DIntroductionProject
         public Face(params int[] Vertices)
         {
             _vertices = new List<int>(Vertices);
-            _normal = calculateNormal();
         }
-
-        public Vector3 calculateNormal()
-        {
-            Vector3 normal = new Vector3();
-
-            return normal;
-        }
-
         
     }
 }

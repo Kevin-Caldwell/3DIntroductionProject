@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace _3DIntroductionProject
 {
-    public class Camera
+    public class Camera : Object
     {
         #region Fields
         private const double DEG_TO_RAD = 0.0174532925199433;
@@ -76,7 +76,7 @@ namespace _3DIntroductionProject
             y = proj.Y;
             z = proj.Z;
 
-            if (x != 0)
+            if (x > 0)
             {
                 //screen.X = (int)(y / x * invYTan * _halfScreenSize.X + _halfScreenSize.X);
                 //screen.Y = (int)(z / x * invZTan * _halfScreenSize.Y + _halfScreenSize.Y);
