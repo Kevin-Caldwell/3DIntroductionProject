@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace _3DIntroductionProject
 {
-    internal class ColorTheme
+    internal class Settings
     {
         public static readonly Color FILL_COLOR = Color.Wheat;
         public static readonly Color WIREFRAME_COLOR = Color.Black;

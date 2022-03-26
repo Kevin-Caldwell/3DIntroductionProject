@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace _3DIntroductionProject
 {
@@ -10,13 +11,18 @@ namespace _3DIntroductionProject
     {
         private List<Object> _objects;
         private int _size;
+        private DataGridView _grid;
+
+        private Object _selectedObject;
 
         public int Size { get { return _size; } }
+        public Object SelectedObject { get { return _selectedObject; } set { _selectedObject = value; } }
 
-        public ObjectManager()
+        public ObjectManager(DataGridView grid)
         {
             _objects = new List<Object>();
             _size = 0;
+            _grid = grid;
         }
 
 
@@ -28,15 +34,18 @@ namespace _3DIntroductionProject
                 newObject.Name = "Object";
             }
             assignName(newObject);
+            _grid.Rows.Add(newObject.Name);
             _size++;
+            _selectedObject = newObject;
         }
 
         public void unregisterObject(string objectName)
         {
-            foreach(Object obj in _objects)
+            for(int i = 0; i < Size; i++)
             {
-                if (obj.Name.Equals(objectName)){
-                    _objects.Remove(obj);
+                if (_objects[i].Name.Equals(objectName)){
+                    _objects.Remove(_objects[i]);
+                    _grid.Rows.RemoveAt(i);
                 }
             }
             _size--;
@@ -84,6 +93,14 @@ namespace _3DIntroductionProject
                 objectNameList.Add(_objects[i].Name);
             }
             return objectNameList;
+        }
+        
+        public void UpdateTransforms()
+        {
+            foreach(Object obj in _objects)
+            {
+                obj.updateTransformedVertices();
+            }
         }
     }
 }

@@ -59,7 +59,7 @@ namespace _3DIntroductionProject
 
         private void drawObject(Object obj, Graphics g)
         {
-            Pen pen = new Pen(ColorTheme.WIREFRAME_COLOR);
+            Pen pen = new Pen(Settings.WIREFRAME_COLOR);
             for (int i = 0; i < obj.Edges.Count; i++)
             {
                 Edge edge = obj.Edges[i];
@@ -82,11 +82,11 @@ namespace _3DIntroductionProject
                     points[j] = ViewportCamera.toScreen(obj.TransformedVertices[face.Vertices[j]].convertToVector());
                 }
 
-                g.FillPolygon(new SolidBrush(ColorTheme.FILL_COLOR), points);
+                g.FillPolygon(new SolidBrush(Settings.FILL_COLOR), points);
             }
 
             PointF p = ViewportCamera.toScreen(obj.Translation);
-            pen.Color = (ColorTheme.POSITION_COLOR);
+            pen.Color = (Settings.POSITION_COLOR);
             g.DrawEllipse(pen, p.X, p.Y, 0.5f, 0.5f);
         }
     }

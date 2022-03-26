@@ -16,7 +16,7 @@ namespace _3DIntroductionProject
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new CubeForm());
+            Application.Run(new UIForm());
         }
     }
 }
