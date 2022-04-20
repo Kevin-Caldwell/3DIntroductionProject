@@ -8,10 +8,13 @@ namespace _3DIntroductionProject
 {
     internal class Transform
     {
+        #region Fields
         private Vector3 _translation;
         private Vector3 _rotation;
         private Vector3 _scale;
+        #endregion
 
+        #region Properties
         public Vector3 Translation
         {
             get
@@ -45,66 +48,83 @@ namespace _3DIntroductionProject
                 _scale = value;
             }
         }
+        #endregion
 
+        #region Constructor
         public Transform()
         {
             _translation = new Vector3(0, 0, 0);
             _rotation = new Vector3(0, 0, 0);
             _scale = new Vector3(1, 1, 1);
         }
+        #endregion
 
+        #region Instance Methods
         public Vertex getTransformedVertex(Vertex v)
         {
             Vertex transformedVertex = new Vertex(v);
 
-            //Scaling
-            transformedVertex.X *= _scale.X;
-            transformedVertex.Y *= _scale.Y;
-            transformedVertex.Z *= _scale.Z;
+            ApplyScale(transformedVertex);
 
-            double X = transformedVertex.X;
-            double Y = transformedVertex.Y;
-            double Z = transformedVertex.Z;
+            transformedVertex = ApplyRotationX(transformedVertex);
+            transformedVertex = ApplyRotationY(transformedVertex);
+            transformedVertex = ApplyRotationZ(transformedVertex);
 
-            // X Rotation
-            double sinX = Math.Sin(_rotation.X);
-            double cosX = Math.Cos(_rotation.X);
-
-            transformedVertex.Y = (Y * cosX + Z * sinX);
-            transformedVertex.Z = (-Y * sinX + Z * cosX);
-
-            X = transformedVertex.X;
-            Y = transformedVertex.Y;
-            Z = transformedVertex.Z;
-
-            // Y Rotation
-            double sinY = Math.Sin(_rotation.Y);
-            double cosY = Math.Cos(_rotation.Y);
-
-            transformedVertex.X = (X * cosY + Z * sinY);
-            transformedVertex.Z = (Z * cosY - X * sinY);
-
-            X = transformedVertex.X;
-            Y = transformedVertex.Y;
-            Z = transformedVertex.Z;
-
-            // Z Rotation
-            double sinZ = Math.Sin(_rotation.Z);
-            double cosZ = Math.Cos(_rotation.Z);
-
-            transformedVertex.X = (X * cosZ - Y * sinZ);
-            transformedVertex.Y = (X * sinZ + Y * cosZ);
-
-            X = transformedVertex.X;
-            Y = transformedVertex.Y;
-            Z = transformedVertex.Z;
-
-            //Translation
-            transformedVertex.X += _translation.X;
-            transformedVertex.Y += _translation.Y;
-            transformedVertex.Z += _translation.Z;
+            ApplyTranslation(transformedVertex);
 
             return transformedVertex;
         }
+
+        public Vertex ApplyScale(Vertex v)
+        {
+            v.X *= _scale.X;
+            v.Y *= _scale.Y;
+            v.Z *= _scale.Z;
+            return v;
+        }
+        public Vertex ApplyTranslation(Vertex v)
+        {
+            v.X += _translation.X;
+            v.Y += _translation.Y;
+            v.Z += _translation.Z;
+            return v;
+        }
+        public Vertex ApplyRotationX(Vertex v)
+        {
+            Vertex rotatedV = new Vertex(v);
+
+            double sinX = Math.Sin(_rotation.X);
+            double cosX = Math.Cos(_rotation.X);
+
+            rotatedV.Y = (v.Y * cosX + v.Z * sinX);
+            rotatedV.Z = (-v.Y * sinX + v.Z * cosX);
+
+            return rotatedV;
+        }
+        public Vertex ApplyRotationY(Vertex v)
+        {
+            Vertex rotatedV = new Vertex(v);
+
+            double sinY = Math.Sin(_rotation.Y);
+            double cosY = Math.Cos(_rotation.Y);
+            
+            rotatedV.X = (v.X * cosY + v.Z * sinY);
+            rotatedV.Z = (v.Z * cosY - v.X * sinY);
+
+            return rotatedV;
+        }
+        public Vertex ApplyRotationZ(Vertex v)
+        {
+            Vertex rotatedV = new Vertex(v);
+
+            double sinZ = Math.Sin(_rotation.Z);
+            double cosZ = Math.Cos(_rotation.Z);
+
+            rotatedV.X = (v.X * cosZ - v.Y * sinZ);
+            rotatedV.Y = (v.X * sinZ + v.Y * cosZ);
+
+            return rotatedV;
+        }
+        #endregion
     }
 }

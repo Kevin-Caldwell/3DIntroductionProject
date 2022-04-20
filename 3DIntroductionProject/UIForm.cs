@@ -17,96 +17,65 @@ namespace _3DIntroductionProject
         private int _screenWidth, _screenHeight;
 
         private RenderUtility RenderU;
-        private ObjectManager objectManager;
+        private ObjectManager objectManager;   
 
-        private Stopwatch timer;
-
-        private int frameCount = 0;
         private int FPS = 0;
-        private long PrevFrameTime = 0;
+
+        private double angle = 0;
+        private long time = 0;
 
         public UIForm()
         {
+            // Generated Code
             InitializeComponent();
+
+            // Strores values for the PictureBox's Height and Width
             _screenHeight = GraphicsDisplayPictureBox.Height;
             _screenWidth = GraphicsDisplayPictureBox.Width;
 
             ObjectDataGridView.Columns.Add("objName", "Objects");
 
-            objectManager = new ObjectManager(ObjectDataGridView);
+            Camera viewportCam = ObjectBuilder.createDefaultCamera(new Point(_screenWidth, _screenHeight));
+            objectManager = new ObjectManager(ObjectDataGridView, viewportCam);
 
-            Camera camera = new Camera(new Vector3(1, 0, 0), new Vector3(0, 0, 1), new Vector3(-5, 0, 0), 70, new Vector3(0, 0, 0), new Point(_screenWidth, _screenHeight));
-            camera.Name = "Camera";
-            camera.Renderable = false;
-            objectManager.registerObject(camera);
-
+            // Object initializations. These are the objects the program starts with.
             objectManager.registerObject(ObjectBuilder.createCube(2));
 
-            objectManager.GetObject(0).Scale = new Vector3(0.5, 0.5, 0.5);
-            RenderU = new RenderUtility(camera, objectManager, GraphicsDisplayPictureBox);
-            ClockTimer.Start();
-            timer = new Stopwatch();
-            PrevFrameTime = timer.ElapsedMilliseconds;
+            RenderU = new RenderUtility(objectManager, GraphicsDisplayPictureBox);
         }
-        double angle = 0;
+
         private void Clock_Tick(object sender, EventArgs e)
         {
-            if (!timer.IsRunning)
-            {
-                timer.Start();
-            }
-            /*Vector3 pos = camera.Basis.Position;
+            time = nanoTime();
 
-            camera.Basis.Forward = camera.Basis.Forward.rotateZ(0.02);
-            camera.Basis.Right = camera.Basis.Right.rotateZ(0.02);
+            Object obj = objectManager.GetObject(0);
 
-            pos.X = Math.Cos(cameraAngle) * 5;
-            pos.Y = Math.Sin(cameraAngle) * 5;
+            obj.Rotation.Z += 0.02;
+            //angle += 0.01;
 
-            cameraAngle += 0.02;*/
+            //obj.Translation.Z = Math.Sin(angle) / 2;
 
-            /*            Object obj = objectManager.GetObject(1);
-
-                        obj.Rotation.Z += 0.02;
-                        angle += 0.05;
-
-                        obj.Translation.Z = Math.Sin(angle) / 2;*/
-
-            //obj.updateTransformedVertices();
             objectManager.UpdateTransforms();
             RenderU.refreshBitmap();
-            //Thread.Sleep(6);  // 64 FPS
-            //Thread.Sleep(12); // 33 FPS
-            //Thread.Sleep(24); // 24 FPS
-            frameCount++;
 
-            FPSLabel.Text = timer.ElapsedMilliseconds.ToString();
-            
-            PrevFrameTime = timer.ElapsedMilliseconds;
-/*          TimerIntervalLabel.Text = ClockTimer.Interval.ToString() + " Clock Interval";
-            const int TARGET_FPS = 20;
-            const int ANALYSIS_INTERVAL = 1000;*/
-
-            if(timer.ElapsedMilliseconds > 200)
-            {
-                FPS = (int)(1000 * frameCount/ (double)timer.ElapsedMilliseconds);
-                AverageFPSLabel.Text = FPS.ToString() + " FPS AVG";
-                
-                frameCount = 0;
-                timer.Restart();
-            }
+            time = nanoTime() - time;
+            FPS = (int)(1000000000L * 1 / (double)time);
+            AverageFPSLabel.Text = FPS.ToString() + " FPS";
         }
 
-        private void UIForm_KeyDown(object sender, KeyEventArgs e)
+        private static long nanoTime()
         {
-
+            long nano = 10000L * Stopwatch.GetTimestamp();
+            nano /= TimeSpan.TicksPerMillisecond;
+            nano *= 100L;
+            return nano;
         }
 
         private void UIForm_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == 'W')
             {
-                objectManager.GetObject("Cube").Translation.multiplyScalar(4.4);
+                objectManager.GetObject("Cylinder").Translation.multiplyScalar(4d);
             }
         }
 
@@ -118,23 +87,6 @@ namespace _3DIntroductionProject
         private void ObjectDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             objectManager.GetObject(e.RowIndex).Name = e.ToString();
-        }
-
-        private void ObjectDataGridView_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
-        {
-            
-        }
-
-        private void TranslationXTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void TranslationYTextBox_TextChanged(object sender, EventArgs e)
-        {
-            double y = objectManager.SelectedObject.Translation.Y;
-            double.TryParse(TranslationYTextBox.Text, out y);
-            objectManager.SelectedObject.Translation.Y = y;
         }
 
         private void TranslationTextBox_TextChanged(object sender, EventArgs e)
@@ -157,11 +109,6 @@ namespace _3DIntroductionProject
                 double.TryParse(TranslationZTextBox.Text, out z);
                 objectManager.SelectedObject.Translation.Z = z;
             }
-        }
-
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
         }
 
         private void TimerButton_Click(object sender, EventArgs e)

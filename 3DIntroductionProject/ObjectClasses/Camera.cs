@@ -20,20 +20,6 @@ namespace _3DIntroductionProject
 
         private double invYTan;
         private double invZTan;
-        private Vector3 _lightSourcePosition;
-        #endregion
-
-        #region Constructors
-        public Camera(Vector3 forward, Vector3 up, Vector3 position, Point screenSize)
-        {
-            initializeCamera(forward, up, position, 70, screenSize);
-        }
-        public Camera(Vector3 forward, Vector3 up, Vector3 position, double fieldOfView, Vector3 lightSourcePosition, Point screenSize)
-        {
-            initializeCamera(forward, up, position, fieldOfView, screenSize);
-
-            _lightSourcePosition = lightSourcePosition;
-        }
         #endregion
 
         #region Properties
@@ -42,8 +28,19 @@ namespace _3DIntroductionProject
         public double FOV { get { return _fov; } set { _fov = value; } }
         #endregion
 
+        #region Constructors
+        public Camera(Vector3 forward, Vector3 up, Vector3 position, Point screenSize)
+        {
+            InitializeCamera(forward, up, position, 70, screenSize);
+        }
+        public Camera(Vector3 forward, Vector3 up, Vector3 position, double fieldOfView, Point screenSize)
+        {
+            InitializeCamera(forward, up, position, fieldOfView, screenSize);
+        }
+        #endregion
+
         #region Instance Methods
-        public void initializeCamera(Vector3 forward, Vector3 up, Vector3 position, double fieldOfView, Point screenSize)
+        public void InitializeCamera(Vector3 forward, Vector3 up, Vector3 position, double fieldOfView, Point screenSize)
         {
             _basis = new OrthonormalBasis(forward, up);
             _basis.Position = position;
@@ -53,9 +50,9 @@ namespace _3DIntroductionProject
             _halfScreenSize = new Point(_screenSize.X / 2, _screenSize.Y / 2);
             
 
-            setFieldOfView(fieldOfView);
+            SetFieldOfView(fieldOfView);
         }
-        public void setFieldOfView(double fieldOfView)
+        public void SetFieldOfView(double fieldOfView)
         {
             double fieldOfViewRad = fieldOfView * DEG_TO_RAD * 0.5; //(FOV in radians) / 2
 
@@ -65,27 +62,24 @@ namespace _3DIntroductionProject
             invYTan = 1.0 / Math.Tan(fieldOfViewRad);
             invZTan = 1.0 / (Math.Tan(fieldOfViewRad / _aspectRatio));
         }
-        public PointF toScreen(Vector3 v)
+        public PointF ToScreen(Vector3 proj)
         {
+            proj = toCameraCoordinates(proj);
             PointF screen = new PointF();
-            double x, y, z;
 
-            Vector3 proj = _basis.projectOntoAxes(v, true);
+            double x = proj.X, y = proj.Y, z = proj.Z;
 
-            x = proj.X;
-            y = proj.Y;
-            z = proj.Z;
-
-            if (x > 0)
+            if (x < 0)
             {
-                //screen.X = (int)(y / x * invYTan * _halfScreenSize.X + _halfScreenSize.X);
-                //screen.Y = (int)(z / x * invZTan * _halfScreenSize.Y + _halfScreenSize.Y);
-
-                screen.X = (float)(-y / x * invYTan * _halfScreenSize.X + _halfScreenSize.X);
-                screen.Y = (float)(-z / x * invZTan * _halfScreenSize.Y + _halfScreenSize.Y);
+                screen.X = (float)(y / x * invYTan * _halfScreenSize.X + _halfScreenSize.X);
+                screen.Y = (float)(z / x * invZTan * _halfScreenSize.Y + _halfScreenSize.Y);
             }
 
             return screen;
+        }
+        public Vector3 toCameraCoordinates(Vector3 v)
+        {
+            return _basis.projectOntoAxes(v, true);
         }
         #endregion
     }

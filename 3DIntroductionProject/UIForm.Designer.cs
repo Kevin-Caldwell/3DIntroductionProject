@@ -32,7 +32,6 @@
             this.GraphicsDisplayPictureBox = new System.Windows.Forms.PictureBox();
             this.TimerButton = new System.Windows.Forms.Button();
             this.ClockTimer = new System.Windows.Forms.Timer(this.components);
-            this.FPSLabel = new System.Windows.Forms.Label();
             this.AverageFPSLabel = new System.Windows.Forms.Label();
             this.ObjectDataGridView = new System.Windows.Forms.DataGridView();
             this.TranslationXTextBox = new System.Windows.Forms.TextBox();
@@ -45,17 +44,17 @@
             this.RotationZTextBox = new System.Windows.Forms.TextBox();
             this.TranslationZTextBox = new System.Windows.Forms.TextBox();
             this.TranslationGroupBox = new System.Windows.Forms.GroupBox();
-            this.cubeFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.cubeFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.GraphicsDisplayPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ObjectDataGridView)).BeginInit();
             this.TranslationGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cubeFormBindingSource)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cubeFormBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // GraphicsDisplayPictureBox
@@ -78,17 +77,8 @@
             // 
             // ClockTimer
             // 
-            this.ClockTimer.Interval = 1;
+            this.ClockTimer.Interval = 4;
             this.ClockTimer.Tick += new System.EventHandler(this.Clock_Tick);
-            // 
-            // FPSLabel
-            // 
-            this.FPSLabel.AutoSize = true;
-            this.FPSLabel.Location = new System.Drawing.Point(699, 646);
-            this.FPSLabel.Name = "FPSLabel";
-            this.FPSLabel.Size = new System.Drawing.Size(36, 13);
-            this.FPSLabel.TabIndex = 16;
-            this.FPSLabel.Text = "0 FPS";
             // 
             // AverageFPSLabel
             // 
@@ -110,7 +100,6 @@
             this.ObjectDataGridView.TabIndex = 18;
             this.ObjectDataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ObjectDataGridView_CellDoubleClick);
             this.ObjectDataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.ObjectDataGridView_CellValueChanged);
-            this.ObjectDataGridView.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.ObjectDataGridView_RowsRemoved);
             // 
             // TranslationXTextBox
             // 
@@ -198,11 +187,6 @@
             this.TranslationGroupBox.TabIndex = 28;
             this.TranslationGroupBox.TabStop = false;
             this.TranslationGroupBox.Text = "Location";
-            this.TranslationGroupBox.Enter += new System.EventHandler(this.groupBox1_Enter);
-            // 
-            // cubeFormBindingSource
-            // 
-            this.cubeFormBindingSource.DataSource = typeof(_3DIntroductionProject.UIForm);
             // 
             // groupBox1
             // 
@@ -240,6 +224,10 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Transformations";
             // 
+            // cubeFormBindingSource
+            // 
+            this.cubeFormBindingSource.DataSource = typeof(_3DIntroductionProject.UIForm);
+            // 
             // UIForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -248,24 +236,22 @@
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.ObjectDataGridView);
             this.Controls.Add(this.AverageFPSLabel);
-            this.Controls.Add(this.FPSLabel);
             this.Controls.Add(this.TimerButton);
             this.Controls.Add(this.GraphicsDisplayPictureBox);
             this.Name = "UIForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "3D Visualizer";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UIForm_KeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.UIForm_KeyPress);
             ((System.ComponentModel.ISupportInitialize)(this.GraphicsDisplayPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ObjectDataGridView)).EndInit();
             this.TranslationGroupBox.ResumeLayout(false);
             this.TranslationGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cubeFormBindingSource)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.cubeFormBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -276,7 +262,6 @@
         private System.Windows.Forms.PictureBox GraphicsDisplayPictureBox;
         private System.Windows.Forms.Button TimerButton;
         private System.Windows.Forms.Timer ClockTimer;
-        private System.Windows.Forms.Label FPSLabel;
         private System.Windows.Forms.Label AverageFPSLabel;
         private System.Windows.Forms.BindingSource cubeFormBindingSource;
         private System.Windows.Forms.DataGridView ObjectDataGridView;

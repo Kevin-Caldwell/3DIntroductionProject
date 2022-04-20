@@ -20,6 +20,8 @@ namespace _3DIntroductionProject
         public double Y { get { return _y; } set { _y = value; } }
         public double Z { get { return _z; } set { _z = value; } }
 
+
+
         #endregion
 
         #region Constructor
@@ -44,6 +46,12 @@ namespace _3DIntroductionProject
         #endregion
 
         #region Instance Methods
+        public void setVector(Vector3 v)
+        {
+            this.X = v.X;
+            this.Y = v.Y;
+            this.Z = v.Z;
+        }
         public Vector3 add(Vector3 v)
         {
             return new Vector3(_x + v.X, _y + v.Y, _z + v.Z);
@@ -52,7 +60,6 @@ namespace _3DIntroductionProject
         {
             return new Vector3(_x - v.X, _y - v.Y, _z - v.Z);
         }
-
         public Vector3 normalize()
         {
             double mag = magnitude();
@@ -81,8 +88,6 @@ namespace _3DIntroductionProject
         {
             return new Vector3(_y * v.Z + _z * v.Y, _x * v.Z + _x * v.Y, _x * v.Y + _y * v.X);
         }
-
-        //Rotate this vector about the x-axis
         public Vector3 rotateX(double thetaRadians)
         {
             double x = _x;
@@ -91,14 +96,12 @@ namespace _3DIntroductionProject
 
             return new Vector3(x, y, z);
         }
-
         public Vector3 rotateDegreesX(double thetaDegrees)
         {
             double thetaRadians = thetaDegrees * Math.PI / 180;
             return rotateX(thetaRadians);
 
         }
-
         public Vector3 rotateY(double thetaRadians)
         {
             double x = Math.Sin(thetaRadians) * _z + Math.Cos(thetaRadians) * _x;
@@ -107,13 +110,11 @@ namespace _3DIntroductionProject
 
             return new Vector3(x, y, z);
         }
-
         public Vector3 rotateDegreesY(double thetaDegrees)
         {
             double thetaRadians = thetaDegrees * Math.PI / 180;
             return rotateY(thetaRadians);
         }
-
         public Vector3 rotateZ(double thetaRadians)
         {
             double x = Math.Cos(thetaRadians) * _x - Math.Sin(thetaRadians) * _y;
@@ -122,7 +123,6 @@ namespace _3DIntroductionProject
 
             return new Vector3(x, y, z);
         }
-
         public Vector3 rotateDegreesZ(double thetaDegrees)
         {
             double thetaRadians = thetaDegrees * Math.PI / 180;

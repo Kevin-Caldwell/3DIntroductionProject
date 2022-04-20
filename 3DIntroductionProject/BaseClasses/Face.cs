@@ -8,17 +8,23 @@ namespace _3DIntroductionProject
 {
     public class Face
     {
-        private List<int> _vertices;
+
+        #region Fields
+        private List<Vertex> _vertices;
         private Vector3 _normal;
-        
-        public List<int> Vertices { get { return _vertices; } set { _vertices = value; } }
+        #endregion
 
+        #region Properties
+        public List<Vertex> Vertices { get { return _vertices; } set { _vertices = value; } }
         public Vector3 Normal { get { return _normal; } set { _normal = value; } }
+        #endregion
 
-        public Face(params int[] Vertices)
+        #region Constructor
+        public Face(params Vertex[] Vertices)
         {
-            _vertices = new List<int>(Vertices);
+            _vertices = new List<Vertex>(Vertices);
         }
-        
+        #endregion
+
     }
 }

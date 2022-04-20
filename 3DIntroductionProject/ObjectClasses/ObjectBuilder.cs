@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,9 +9,16 @@ namespace _3DIntroductionProject
 {
     internal class ObjectBuilder
     {
+        public static Camera createDefaultCamera(Point screenSize)
+        {
+            Camera camera = new Camera(new Vector3(1, 0, 0), new Vector3(0, 0, 1), new Vector3(9, 0, 0), 70, screenSize);
+            camera.Name = "Camera";
+            return camera;
+        }
         public static Object createCube(double size)
         {
-            List<Vertex> vertices = new List<Vertex>();
+            List<Vertex> vertices = new List<Vertex>();            
+
             for (int i = 0; i < 2; i++)
             {
                 for (int j = 0; j < 2; j++)
@@ -25,6 +33,7 @@ namespace _3DIntroductionProject
                     }
                 }
             }
+            Object cube = new Object(vertices);
             //(0, 0, 0) 0
             //(0, 0, s) 1
             //(0, s, 0) 2
@@ -36,35 +45,127 @@ namespace _3DIntroductionProject
 
             List<Edge> edges = new List<Edge>();
 
-            edges.Add(new Edge(0, 1));
-            edges.Add(new Edge(0, 2));
-            edges.Add(new Edge(0, 4));
+            edges.Add(new Edge(cube.TransformedVertices[0], cube.TransformedVertices[1]));
+            edges.Add(new Edge(cube.TransformedVertices[0], cube.TransformedVertices[2]));
+            edges.Add(new Edge(cube.TransformedVertices[0], cube.TransformedVertices[4]));
 
-            edges.Add(new Edge(3, 1));
-            edges.Add(new Edge(3, 2));
-            edges.Add(new Edge(3, 7));
+            edges.Add(new Edge(cube.TransformedVertices[3], cube.TransformedVertices[1]));
+            edges.Add(new Edge(cube.TransformedVertices[3], cube.TransformedVertices[2]));
+            edges.Add(new Edge(cube.TransformedVertices[3], cube.TransformedVertices[7]));
 
-            edges.Add(new Edge(5, 1));
-            edges.Add(new Edge(5, 4));
-            edges.Add(new Edge(5, 7));
+            edges.Add(new Edge(cube.TransformedVertices[5], cube.TransformedVertices[1]));
+            edges.Add(new Edge(cube.TransformedVertices[5], cube.TransformedVertices[4]));
+            edges.Add(new Edge(cube.TransformedVertices[5], cube.TransformedVertices[7]));
 
-            edges.Add(new Edge(6, 2));
-            edges.Add(new Edge(6, 4));
-            edges.Add(new Edge(6, 7));
+            edges.Add(new Edge(cube.TransformedVertices[6], cube.TransformedVertices[2]));
+            edges.Add(new Edge(cube.TransformedVertices[6], cube.TransformedVertices[4]));
+            edges.Add(new Edge(cube.TransformedVertices[6], cube.TransformedVertices[7]));
+
+            cube.Edges = edges;
 
             List<Face> faces = new List<Face>();
-            faces.Add(new Face(0, 1, 3, 2));
-            faces.Add(new Face(0, 1, 5, 4));
+            faces.Add(new Face(cube.TransformedVertices[0],
+                cube.TransformedVertices[1],
+                cube.TransformedVertices[3],
+                cube.TransformedVertices[2]));
 
-            faces.Add(new Face(0, 2, 6, 4));
-            faces.Add(new Face(1, 3, 7, 5));
+            faces.Add(new Face(cube.TransformedVertices[0],
+                cube.TransformedVertices[1],
+                cube.TransformedVertices[5], 
+                cube.TransformedVertices[4]));
 
-            faces.Add(new Face(2, 3, 7, 6));
-            faces.Add(new Face(6, 4, 5, 7));
-            Object cube = new Object(vertices, edges, faces);
+            faces.Add(new Face(cube.TransformedVertices[0],
+                cube.TransformedVertices[2], 
+                cube.TransformedVertices[6], 
+                cube.TransformedVertices[4]));
+
+            faces.Add(new Face(cube.TransformedVertices[1],
+                cube.TransformedVertices[3],
+                cube.TransformedVertices[7], 
+                cube.TransformedVertices[5]));
+
+            faces.Add(new Face(cube.TransformedVertices[2], 
+                cube.TransformedVertices[3], 
+                cube.TransformedVertices[7], 
+                cube.TransformedVertices[6]));
+
+            faces.Add(new Face(cube.TransformedVertices[6], 
+                cube.TransformedVertices[4], 
+                cube.TransformedVertices[5], 
+                cube.TransformedVertices[7]));
+
+            cube.Faces = faces;
+
             cube.Name = "Cube";
             return cube;
         }
+        public static Object createCylinder(double radius, double height, int subdivisions)
+        {
+            Object cylinder = new Object();
 
+            List<Vertex> vertices = new List<Vertex>();
+            List<Edge> edges = new List<Edge>();
+            List<Face> faces = new List<Face>();
+
+            double angle = 0;
+            for (int i = 0; i < subdivisions; i++)
+            {
+                vertices.Add(new Vertex(radius * Math.Cos(angle), radius * Math.Sin(angle), height / 2));
+                angle += 2 * Math.PI / subdivisions;
+            }
+
+            angle = 0;
+            for (int i = 0; i < subdivisions; i++)
+            {
+                vertices.Add(new Vertex(radius * Math.Cos(angle), radius * Math.Sin(angle), -height / 2));
+                angle += 2 * Math.PI / subdivisions;
+            }
+
+            for(int i = 0; i < subdivisions - 1; i++)
+            {
+                edges.Add(new Edge(cylinder.TransformedVertices[i], 
+                    cylinder.TransformedVertices[i + 1]));
+
+                edges.Add(new Edge(cylinder.TransformedVertices[subdivisions + i],
+                    cylinder.TransformedVertices[subdivisions + i + 1]));
+            }
+            edges.Add(new Edge(cylinder.TransformedVertices[0], 
+                cylinder.TransformedVertices[subdivisions - 1]));
+
+            edges.Add(new Edge(cylinder.TransformedVertices[subdivisions],
+                cylinder.TransformedVertices[2 * subdivisions - 1]));
+
+            for (int i = 0; i < subdivisions; i++)
+            {
+                edges.Add(new Edge(cylinder.TransformedVertices[i], 
+                    cylinder.TransformedVertices[subdivisions + i]));
+
+                edges.Add(new Edge(cylinder.TransformedVertices[i + subdivisions],
+                    cylinder.TransformedVertices[i]));
+            }
+
+            Face topFace = new Face();
+            Face bottomFace = new Face();
+            for(int i = 0; i < subdivisions; i++)
+            {
+                topFace.Vertices.Add(cylinder.TransformedVertices[i]);
+                bottomFace.Vertices.Add(cylinder.TransformedVertices[subdivisions + i]);
+            }
+
+            faces.Add(topFace);
+            faces.Add(bottomFace);
+
+            for(int i = 0; i < subdivisions - 1; i++)
+            {
+
+            }
+
+
+            cylinder.Vertices = vertices;
+            cylinder.Edges = edges;
+            cylinder.Faces = faces;
+            cylinder.Name = "Cylinder";
+            return cylinder;
+        }
     }
 }

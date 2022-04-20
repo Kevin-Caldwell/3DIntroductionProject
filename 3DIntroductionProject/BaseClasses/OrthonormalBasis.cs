@@ -46,6 +46,8 @@ namespace _3DIntroductionProject
             projection.Y = _right.dotProduct(v);
             projection.Z = _up.dotProduct(v);
 
+            v.setVector(projection);
+            
             return projection;
         }
 

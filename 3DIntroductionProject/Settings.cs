@@ -12,5 +12,6 @@ namespace _3DIntroductionProject
         public static readonly Color FILL_COLOR = Color.Wheat;
         public static readonly Color WIREFRAME_COLOR = Color.Black;
         public static readonly Color POSITION_COLOR = Color.Teal;
+        public static readonly Color VERTEX_COLOR = Color.Red;
     }
 }

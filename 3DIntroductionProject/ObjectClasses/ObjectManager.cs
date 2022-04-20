@@ -9,23 +9,33 @@ namespace _3DIntroductionProject
 {
     internal class ObjectManager
     {
+        #region Fields
         private List<Object> _objects;
         private int _size;
         private DataGridView _grid;
+        private Camera _camera;
 
         private Object _selectedObject;
+        #endregion
 
+        #region Properties
         public int Size { get { return _size; } }
         public Object SelectedObject { get { return _selectedObject; } set { _selectedObject = value; } }
+        public List<Object> Objects { get { return _objects; } set { _objects = value; } }
+        public Camera ViewportCamera { get { return _camera; } set { _camera = value; } }
+        #endregion
 
-        public ObjectManager(DataGridView grid)
+        #region Constructor
+        public ObjectManager(DataGridView grid, Camera viewportCamera)
         {
             _objects = new List<Object>();
             _size = 0;
             _grid = grid;
+            _camera = viewportCamera;
         }
+        #endregion
 
-
+        #region Instance Methods
         public void registerObject(Object newObject)
         {
             _objects.Add(newObject);
@@ -41,9 +51,10 @@ namespace _3DIntroductionProject
 
         public void unregisterObject(string objectName)
         {
-            for(int i = 0; i < Size; i++)
+            for (int i = 0; i < Size; i++)
             {
-                if (_objects[i].Name.Equals(objectName)){
+                if (_objects[i].Name.Equals(objectName))
+                {
                     _objects.Remove(_objects[i]);
                     _grid.Rows.RemoveAt(i);
                 }
@@ -59,7 +70,7 @@ namespace _3DIntroductionProject
         public Object GetObject(string name)
         {
             Object requiredObject = null;
-            foreach(Object obj in _objects)
+            foreach (Object obj in _objects)
             {
                 if (obj.Name.Equals(name))
                 {
@@ -72,9 +83,10 @@ namespace _3DIntroductionProject
         public void assignName(Object unnamedObject)
         {
             int index = 0;
-            for(int i=  0; i < _objects.Count; i++)
+            for (int i = 0; i < _objects.Count; i++)
             {
-                if (_objects[i].Name.Contains(unnamedObject.Name)){
+                if (_objects[i].Name.Contains(unnamedObject.Name))
+                {
                     index++;
                 }
             }
@@ -88,19 +100,20 @@ namespace _3DIntroductionProject
         public List<string> getObjectNameList()
         {
             List<string> objectNameList = new List<string>();
-            for(int i = 0; i < _size; i++)
+            for (int i = 0; i < _size; i++)
             {
                 objectNameList.Add(_objects[i].Name);
             }
             return objectNameList;
         }
-        
+
         public void UpdateTransforms()
         {
-            foreach(Object obj in _objects)
+            foreach (Object obj in _objects)
             {
-                obj.updateTransformedVertices();
+                obj.UpdateTransformedVertices();
             }
         }
+        #endregion
     }
 }

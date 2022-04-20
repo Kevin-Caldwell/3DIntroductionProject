@@ -11,6 +11,7 @@ namespace _3DIntroductionProject
 {
     internal class RenderUtility
     {
+        #region Fields
         private int _screenWidth, _screenHeight;
 
         private Camera ViewportCamera;
@@ -20,25 +21,30 @@ namespace _3DIntroductionProject
         private PictureBox RenderedPictureBox;
         private Graphics DrawingSurface;
 
-        public bool isRendering = false;
+        private List<object> RenderQueue;
 
-        public RenderUtility(Camera activeCamera, ObjectManager OM, PictureBox pictureBox)
+        public bool isRendering = false;
+        #endregion
+
+        #region Constructors
+        public RenderUtility(ObjectManager OM, PictureBox pictureBox)
         {
             _screenHeight = pictureBox.Height;
             _screenWidth = pictureBox.Width;
             RenderBitmap = new Bitmap(_screenWidth, _screenHeight);
             DrawingSurface = Graphics.FromImage(RenderBitmap);
 
-            ViewportCamera = activeCamera;
             objectManager = OM;
+
+            ViewportCamera = OM.ViewportCamera;
             RenderedPictureBox = pictureBox;
             RenderedPictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.PictureBox_Paint);
-
         }
+        #endregion
 
         private void PictureBox_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawImage(RenderBitmap, 0, 0); 
+            e.Graphics.DrawImage(RenderBitmap, 0, 0);
         }
 
         public void refreshBitmap()
@@ -46,48 +52,131 @@ namespace _3DIntroductionProject
             Graphics g = Graphics.FromImage(RenderBitmap);
             g.Clear(Color.White);
 
-            for (int i = 0; i < objectManager.Size; i++)
-            {
-                if (objectManager.GetObject(i).Renderable)
-                {
-                    drawObject(objectManager.GetObject(i), g);
-                }
-            }
+            RenderQueue = PrepareRenderingQueue(objectManager.Objects);
+            BubbleSort(RenderQueue);
+
+            RenderAllObjects(RenderQueue, g);
+
             isRendering = false;
             RenderedPictureBox.Refresh();
         }
 
-        private void drawObject(Object obj, Graphics g)
+        private List<object> PrepareRenderingQueue(List<Object> objectList)
         {
-            Pen pen = new Pen(Settings.WIREFRAME_COLOR);
-            for (int i = 0; i < obj.Edges.Count; i++)
+            List<object> RenderQueue = new List<object>();
+            foreach (Object obj in objectList)
             {
-                Edge edge = obj.Edges[i];
-                PointF[] points = new PointF[2];
-
-                points[0] = ViewportCamera.toScreen(obj.TransformedVertices[edge.A].convertToVector());
-                points[1] = ViewportCamera.toScreen(obj.TransformedVertices[edge.B].convertToVector());
-                pen.Width = 5;
-
-                g.DrawLine(pen, points[0], points[1]);
-            }
-
-            for (int i = 0; i < obj.Faces.Count; i++)
-            {
-                Face face = obj.Faces[i];
-                PointF[] points = new PointF[face.Vertices.Count];
-
-                for (int j = 0; j < face.Vertices.Count; j++)
+                foreach (Vertex v in obj.TransformedVertices)
                 {
-                    points[j] = ViewportCamera.toScreen(obj.TransformedVertices[face.Vertices[j]].convertToVector());
+                    RenderQueue.Add(v);
                 }
 
-                g.FillPolygon(new SolidBrush(Settings.FILL_COLOR), points);
+                foreach (Edge edge in obj.Edges)
+                {
+                    RenderQueue.Add(edge);
+                }
+
+                foreach (Face face in obj.Faces)
+                {
+                    RenderQueue.Add(face);
+                }
             }
 
-            PointF p = ViewportCamera.toScreen(obj.Translation);
-            pen.Color = (Settings.POSITION_COLOR);
-            g.DrawEllipse(pen, p.X, p.Y, 0.5f, 0.5f);
+            return RenderQueue;
+        }
+
+        private void RenderAllObjects(List<object> ObjectAttributes, Graphics g)
+        {
+            Pen pen = new Pen(Settings.VERTEX_COLOR);
+            foreach (object obj in ObjectAttributes)
+            {
+                //Thread.Sleep(100);
+                //RenderedPictureBox.Refresh();
+
+                if (obj is Vertex v)
+                {
+                    pen = new Pen(Settings.VERTEX_COLOR);
+
+                    PointF point = ViewportCamera.ToScreen(v.convertToVector());
+                    pen.Width = 5;
+                    g.FillEllipse(new SolidBrush(Settings.WIREFRAME_COLOR), point.X, point.Y, 2, 2);
+
+                }
+                else if (obj is Edge edge)
+                {
+                    PointF[] points = new PointF[2];
+
+                    points[0] = ViewportCamera.ToScreen(edge.A.convertToVector());
+                    points[1] = ViewportCamera.ToScreen(edge.B.convertToVector());
+
+                    pen = new Pen(Settings.WIREFRAME_COLOR) {Width = 5};
+
+                    g.DrawLine(pen, points[0], points[1]);
+                }
+                else if (obj is Face face)
+                {
+                    PointF[] points = new PointF[face.Vertices.Count];
+
+                    for (int i = 0; i < face.Vertices.Count; i++)
+                    {
+                        points[i] = ViewportCamera.ToScreen(face.Vertices[i].convertToVector());
+                    }
+
+                    g.FillPolygon(new SolidBrush(Settings.FILL_COLOR), points);
+                }
+            }
+        }
+
+        private void BubbleSort(List<object> list)
+        {
+
+            bool sorted = false;
+
+            while (!sorted)
+            {
+                sorted = true;
+                for (int i = 0; i < list.Count - 1; i++)
+                {
+                    if (GetDistanceFromCamera(list[i + 1]) < GetDistanceFromCamera(list[i]))
+                    {
+                        object temp = list[i + 1];
+                        list[i + 1] = list[i];
+                        list[i] = temp;
+
+                        sorted = false;
+                    }
+                }
+            }
+        }
+
+        private double GetDistanceFromCamera(object obj)
+        {
+            double x = -1;
+
+            if(obj is Vertex)
+            {
+                x = Minimum(x, ViewportCamera.toCameraCoordinates(((Vertex)obj).convertToVector()).X);
+            } else if(obj is Edge)
+            {
+                Edge edge = (Edge)obj;
+                double avg = (ViewportCamera.toCameraCoordinates((edge.A).convertToVector()).X
+                    + ViewportCamera.toCameraCoordinates((edge.B).convertToVector()).X) / 2;
+                x = Minimum(x, avg);
+
+            } else if (obj is Face)
+            {
+                foreach (Vertex v in ((Face)obj).Vertices)
+                {
+                    x = Minimum(x, ViewportCamera.toCameraCoordinates((v).convertToVector()).X);
+                }
+            }
+
+            return x;
+        }
+
+        private double Minimum(double x, double y)
+        {
+            return x < y ? x : y;
         }
     }
 }

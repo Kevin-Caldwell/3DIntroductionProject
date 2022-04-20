@@ -46,6 +46,12 @@ namespace _3DIntroductionProject
         {
             return new Vector3(X, Y, Z);
         }
+        public void setVertex(Vertex v)
+        {
+            this.X = v.X;
+            this.Y = v.Y;
+            this.Z = v.Z;
+        }
         #endregion
     }
 }
