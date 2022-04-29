@@ -48,6 +48,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.cubeFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.TimeLogLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.GraphicsDisplayPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ObjectDataGridView)).BeginInit();
             this.TranslationGroupBox.SuspendLayout();
@@ -228,11 +229,21 @@
             // 
             this.cubeFormBindingSource.DataSource = typeof(_3DIntroductionProject.UIForm);
             // 
+            // TimeLogLabel
+            // 
+            this.TimeLogLabel.AutoSize = true;
+            this.TimeLogLabel.Location = new System.Drawing.Point(742, 563);
+            this.TimeLogLabel.Name = "TimeLogLabel";
+            this.TimeLogLabel.Size = new System.Drawing.Size(74, 13);
+            this.TimeLogLabel.TabIndex = 32;
+            this.TimeLogLabel.Text = "TimeLogLabel";
+            // 
             // UIForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1352, 684);
+            this.Controls.Add(this.TimeLogLabel);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.ObjectDataGridView);
             this.Controls.Add(this.AverageFPSLabel);
@@ -278,6 +289,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label TimeLogLabel;
     }
 }
 

@@ -74,7 +74,6 @@ namespace _3DIntroductionProject
 
             return transformedVertex;
         }
-
         public Vertex ApplyScale(Vertex v)
         {
             v.X *= _scale.X;

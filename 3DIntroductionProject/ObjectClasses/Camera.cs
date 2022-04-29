@@ -62,9 +62,14 @@ namespace _3DIntroductionProject
             invYTan = 1.0 / Math.Tan(fieldOfViewRad);
             invZTan = 1.0 / (Math.Tan(fieldOfViewRad / _aspectRatio));
         }
+        /// <summary>
+        /// Calculates the Screen Coordinates of a given vertex.
+        /// </summary>
+        /// <param name="proj">Vector3 relative to Camera</param>
+        /// <returns> A PointF Object </returns>
         public PointF ToScreen(Vector3 proj)
         {
-            proj = toCameraCoordinates(proj);
+            proj = ToCameraCoordinates(proj);
             PointF screen = new PointF();
 
             double x = proj.X, y = proj.Y, z = proj.Z;
@@ -77,7 +82,13 @@ namespace _3DIntroductionProject
 
             return screen;
         }
-        public Vector3 toCameraCoordinates(Vector3 v)
+
+        /// <summary>
+        /// Converts a Vector3 relative 
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public Vector3 ToCameraCoordinates(Vector3 v)
         {
             return _basis.projectOntoAxes(v, true);
         }

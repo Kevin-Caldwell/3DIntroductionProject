@@ -12,11 +12,11 @@ namespace _3DIntroductionProject
     internal class RenderUtility
     {
         #region Fields
-        private int _screenWidth, _screenHeight;
+        private readonly int _screenWidth, _screenHeight;
 
         private Camera ViewportCamera;
         private Bitmap RenderBitmap;
-        private ObjectManager objectManager;
+        private ObjectManager ObjectStorage;
 
         private PictureBox RenderedPictureBox;
         private Graphics DrawingSurface;
@@ -24,21 +24,24 @@ namespace _3DIntroductionProject
         private List<object> RenderQueue;
 
         public bool isRendering = false;
+
+        private Monitoring monitor;
         #endregion
 
         #region Constructors
-        public RenderUtility(ObjectManager OM, PictureBox pictureBox)
+        public RenderUtility(ObjectManager OM, PictureBox pictureBox, Monitoring monitor)
         {
             _screenHeight = pictureBox.Height;
             _screenWidth = pictureBox.Width;
             RenderBitmap = new Bitmap(_screenWidth, _screenHeight);
             DrawingSurface = Graphics.FromImage(RenderBitmap);
 
-            objectManager = OM;
+            ObjectStorage = OM;
 
             ViewportCamera = OM.ViewportCamera;
             RenderedPictureBox = pictureBox;
             RenderedPictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.PictureBox_Paint);
+            this.monitor = monitor;
         }
         #endregion
 
@@ -47,15 +50,18 @@ namespace _3DIntroductionProject
             e.Graphics.DrawImage(RenderBitmap, 0, 0);
         }
 
-        public void refreshBitmap()
+        public void RefreshBitmap()
         {
             Graphics g = Graphics.FromImage(RenderBitmap);
             g.Clear(Color.White);
 
-            RenderQueue = PrepareRenderingQueue(objectManager.Objects);
+            RenderQueue = PrepareRenderingQueue(ObjectStorage.Objects);
+            monitor.Log(2);
             BubbleSort(RenderQueue);
+            monitor.Log(3);
 
             RenderAllObjects(RenderQueue, g);
+            monitor.Log(4);
 
             isRendering = false;
             RenderedPictureBox.Refresh();
@@ -64,40 +70,50 @@ namespace _3DIntroductionProject
         private List<object> PrepareRenderingQueue(List<Object> objectList)
         {
             List<object> RenderQueue = new List<object>();
+
             foreach (Object obj in objectList)
             {
-                foreach (Vertex v in obj.TransformedVertices)
+                if (obj.Visible)
                 {
-                    RenderQueue.Add(v);
-                }
+                    foreach (Vertex v in obj.TransformedVertices)
+                    {
+                        RenderQueue.Add(v);
+                    }
 
-                foreach (Edge edge in obj.Edges)
-                {
-                    RenderQueue.Add(edge);
-                }
+                    foreach (Edge edge in obj.Edges)
+                    {
+                        RenderQueue.Add(edge);
+                    }
 
-                foreach (Face face in obj.Faces)
-                {
-                    RenderQueue.Add(face);
+                    foreach (Face face in obj.Faces)
+                    {
+                        RenderQueue.Add(face);
+                    }
                 }
             }
-
             return RenderQueue;
         }
 
+        /// <summary>
+        /// Method for rendering all renderable objects.
+        /// </summary>
+        /// <param name="ObjectAttributes">List of Object Attributes (Vertices, Edges, Faces)</param>
+        /// <param name="g">Graphics Object</param>
         private void RenderAllObjects(List<object> ObjectAttributes, Graphics g)
         {
-            Pen pen = new Pen(Settings.VERTEX_COLOR);
             foreach (object obj in ObjectAttributes)
             {
-                //Thread.Sleep(100);
-                //RenderedPictureBox.Refresh();
+                Pen pen;
 
+                //RenderedPictureBox.Refresh();
+                //Thread.Sleep(300);
+                //Application.DoEvents();
+                
                 if (obj is Vertex v)
                 {
                     pen = new Pen(Settings.VERTEX_COLOR);
 
-                    PointF point = ViewportCamera.ToScreen(v.convertToVector());
+                    PointF point = ViewportCamera.ToScreen(v.ConvertToVector());
                     pen.Width = 5;
                     g.FillEllipse(new SolidBrush(Settings.WIREFRAME_COLOR), point.X, point.Y, 2, 2);
 
@@ -106,10 +122,10 @@ namespace _3DIntroductionProject
                 {
                     PointF[] points = new PointF[2];
 
-                    points[0] = ViewportCamera.ToScreen(edge.A.convertToVector());
-                    points[1] = ViewportCamera.ToScreen(edge.B.convertToVector());
+                    points[0] = ViewportCamera.ToScreen(edge.A.ConvertToVector());
+                    points[1] = ViewportCamera.ToScreen(edge.B.ConvertToVector());
 
-                    pen = new Pen(Settings.WIREFRAME_COLOR) {Width = 5};
+                    pen = new Pen(Settings.WIREFRAME_COLOR) { Width = 5 };
 
                     g.DrawLine(pen, points[0], points[1]);
                 }
@@ -119,64 +135,94 @@ namespace _3DIntroductionProject
 
                     for (int i = 0; i < face.Vertices.Count; i++)
                     {
-                        points[i] = ViewportCamera.ToScreen(face.Vertices[i].convertToVector());
+                        points[i] = ViewportCamera.ToScreen(face.Vertices[i].ConvertToVector());
                     }
 
                     g.FillPolygon(new SolidBrush(Settings.FILL_COLOR), points);
                 }
             }
         }
-
+        /// <summary>
+        /// Extremely temporary method for sorting Properties of Objects.
+        /// </summary>
+        /// <param name="list"></param>
         private void BubbleSort(List<object> list)
         {
-
             bool sorted = false;
-
             while (!sorted)
             {
                 sorted = true;
                 for (int i = 0; i < list.Count - 1; i++)
                 {
-                    if (GetDistanceFromCamera(list[i + 1]) < GetDistanceFromCamera(list[i]))
+                    if (GetDistanceFromCamera(list[i + 1]) > GetDistanceFromCamera(list[i]))
                     {
-                        object temp = list[i + 1];
-                        list[i + 1] = list[i];
-                        list[i] = temp;
-
+                        (list[i], list[i + 1]) = (list[i + 1], list[i]);
                         sorted = false;
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="obj">Vertex, Edge or Face object</param>
+        /// <returns>Distance of Vertex / Mid Point / Median from the Camera</returns>
         private double GetDistanceFromCamera(object obj)
         {
             double x = -1;
 
-            if(obj is Vertex)
+            if (obj is Vertex v)
             {
-                x = Minimum(x, ViewportCamera.toCameraCoordinates(((Vertex)obj).convertToVector()).X);
-            } else if(obj is Edge)
+                x = PointDistanceFromOrigin(ViewportCamera.ToCameraCoordinates(v.ConvertToVector()));
+            }
+            else if (obj is Edge edge)
             {
-                Edge edge = (Edge)obj;
-                double avg = (ViewportCamera.toCameraCoordinates((edge.A).convertToVector()).X
-                    + ViewportCamera.toCameraCoordinates((edge.B).convertToVector()).X) / 2;
-                x = Minimum(x, avg);
+                Vertex midPoint = new Vertex();
+                (midPoint.X, midPoint.Y, midPoint.Z) = (midPoint.Y, midPoint.Z, midPoint.X); 
 
-            } else if (obj is Face)
+                midPoint.X += edge.A.X;
+                midPoint.Y += edge.A.Y;
+                midPoint.Z += edge.A.Z;
+
+                midPoint.X += edge.B.X;
+                midPoint.Y += edge.B.Y;
+                midPoint.Z += edge.B.Z;
+
+                midPoint.X /= 2;
+                midPoint.Y /= 2;
+                midPoint.Z /= 2;
+
+                x = PointDistanceFromOrigin(ViewportCamera.ToCameraCoordinates(midPoint.ConvertToVector()));
+
+            }
+            else if (obj is Face face)
             {
-                foreach (Vertex v in ((Face)obj).Vertices)
+
+                Vertex median = new Vertex();
+                foreach (Vertex vertex in face.Vertices)
                 {
-                    x = Minimum(x, ViewportCamera.toCameraCoordinates((v).convertToVector()).X);
+                    median.X += vertex.X;
+                    median.Y += vertex.Y;
+                    median.Z += vertex.Z;
                 }
+
+                median.X /= face.Vertices.Count;
+                median.Y /= face.Vertices.Count;
+                median.Z /= face.Vertices.Count;
+
+
+                x = PointDistanceFromOrigin(ViewportCamera.ToCameraCoordinates(median.ConvertToVector()));
             }
 
             return x;
         }
-
-        private double Minimum(double x, double y)
+/*        private double Minimum(double x, double y)
         {
             return x < y ? x : y;
+        }*/
+        private double PointDistanceFromOrigin(Vector3 v)
+        {
+            return Math.Sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z);
         }
     }
 }

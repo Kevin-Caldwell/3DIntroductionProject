@@ -14,18 +14,20 @@ namespace _3DIntroductionProject
 {
     public partial class UIForm : Form
     {
-        private int _screenWidth, _screenHeight;
 
-        private RenderUtility RenderU;
-        private ObjectManager objectManager;   
+        #region Fields
+        private readonly int _screenWidth, _screenHeight;
 
-        private int FPS = 0;
+        private readonly RenderUtility RenderU;
+        private readonly ObjectManager objectManager;   
+        private readonly Monitoring FPSMonitor;
 
-        private double angle = 0;
-        private long time = 0;
+        #endregion
 
+        #region Constructor
         public UIForm()
         {
+            FPSMonitor = new Monitoring();
             // Generated Code
             InitializeComponent();
 
@@ -35,19 +37,27 @@ namespace _3DIntroductionProject
 
             ObjectDataGridView.Columns.Add("objName", "Objects");
 
-            Camera viewportCam = ObjectBuilder.createDefaultCamera(new Point(_screenWidth, _screenHeight));
+            // Camera Setup
+            Camera viewportCam = ObjectBuilder.CreateDefaultCamera(new Point(_screenWidth, _screenHeight));
             objectManager = new ObjectManager(ObjectDataGridView, viewportCam);
 
             // Object initializations. These are the objects the program starts with.
-            objectManager.registerObject(ObjectBuilder.createCube(2));
+            objectManager.registerObject(ObjectBuilder.CreateCylinder(2, 3, 32));
+            objectManager.registerObject(ObjectBuilder.CreateCylinder(2, 3, 16));
+            objectManager.GetObject(1).Translation = new Vector3(0, 1, 1);
+            //objectManager.registerObject(ObjectBuilder.CreatePlane(5));
 
-            RenderU = new RenderUtility(objectManager, GraphicsDisplayPictureBox);
+            RenderU = new RenderUtility(objectManager, GraphicsDisplayPictureBox, FPSMonitor);
         }
+        #endregion
 
+        /// <summary>
+        /// Loop which refreshes the window 40 to 90 times per second
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Clock_Tick(object sender, EventArgs e)
         {
-            time = nanoTime();
-
             Object obj = objectManager.GetObject(0);
 
             obj.Rotation.Z += 0.02;
@@ -56,19 +66,19 @@ namespace _3DIntroductionProject
             //obj.Translation.Z = Math.Sin(angle) / 2;
 
             objectManager.UpdateTransforms();
-            RenderU.refreshBitmap();
+            FPSMonitor.Log(0);
 
-            time = nanoTime() - time;
-            FPS = (int)(1000000000L * 1 / (double)time);
-            AverageFPSLabel.Text = FPS.ToString() + " FPS";
-        }
+            RenderU.RefreshBitmap();
 
-        private static long nanoTime()
-        {
-            long nano = 10000L * Stopwatch.GetTimestamp();
-            nano /= TimeSpan.TicksPerMillisecond;
-            nano *= 100L;
-            return nano;
+            FPSMonitor.FramePassed();
+            AverageFPSLabel.Text = FPSMonitor.FPS.ToString() + " FPS";
+
+            TimeLogLabel.Text = "";
+            
+            for(int i = 0; i < 5; i++)
+            {
+                TimeLogLabel.Text += FPSMonitor.TimeSpentComparisons[i] + " , ";
+            }
         }
 
         private void UIForm_KeyPress(object sender, KeyPressEventArgs e)

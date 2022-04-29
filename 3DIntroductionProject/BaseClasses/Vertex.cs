@@ -42,11 +42,11 @@ namespace _3DIntroductionProject
         #endregion
 
         #region Instance Methods
-        public Vector3 convertToVector()
+        public Vector3 ConvertToVector()
         {
             return new Vector3(X, Y, Z);
         }
-        public void setVertex(Vertex v)
+        public void SetVertex(Vertex v)
         {
             this.X = v.X;
             this.Y = v.Y;

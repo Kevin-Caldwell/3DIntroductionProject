@@ -11,19 +11,17 @@ namespace _3DIntroductionProject
         #region Fields
         private string _name;
         private bool _renderable = true;
-        private Transform _transform;
 
         private List<Face> _faces;
         private List<Edge> _edges;
         private List<Vertex> _vertices;
 
+        private Transform _transform;
         private List<Vertex> _transformedVertices;
-        private List<Vertex> _cameraTransformedVertices;
         #endregion
 
         #region Properties
         public String Name { get { return _name; } set { _name = value; } }
-
         public List<Face> Faces
         {
             get
@@ -99,12 +97,14 @@ namespace _3DIntroductionProject
             }
         }
 
-        public bool Renderable { get { return _renderable; } set { _renderable = value; } }
+        public bool Visible { get { return _renderable; } set { _renderable = value; } }
         public List<Vertex> TransformedVertices { get { return _transformedVertices; } set { _transformedVertices = value; } }
-        public List<Vertex> CameraTranformedVertices { get { return _cameraTransformedVertices; } set { _cameraTransformedVertices = value; } }
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Empty Constructor which initializes the required Fields for an Object`1.
+        /// </summary>
         public Object()
         {
             _vertices = new List<Vertex>(0);
@@ -115,6 +115,7 @@ namespace _3DIntroductionProject
             _transformedVertices = new List<Vertex>(0);
             UpdateTransformedVertices();
         }
+
         public Object(List<Vertex> Vertices)
         {
             _vertices = Vertices;
@@ -129,11 +130,11 @@ namespace _3DIntroductionProject
             }
             UpdateTransformedVertices();
         }
+
         public Object(List<Vertex> vertices, List<Edge> edges, List<Face> faces)
         {
             _vertices = vertices;
             _edges = edges;
-
             _faces = faces;
 
             _transform = new Transform();
@@ -143,28 +144,58 @@ namespace _3DIntroductionProject
         #endregion
 
         #region Instance Methods
+
         public void UpdateTransformedVertices()
         {
-            for (int i = 0; i < Vertices.Count; i++)
+            if(Vertices.Count == TransformedVertices.Count)
             {
-                TransformedVertices[i].setVertex(_transform.getTransformedVertex(_vertices[i]));
+                for (int i = 0; i < Vertices.Count; i++)
+                {
+                    TransformedVertices[i].SetVertex(_transform.getTransformedVertex(_vertices[i]));
+                }
             }
+            else
+            {
+                TransformedVertices.Clear();
+                for(int i = 0; i < Vertices.Count; i++)
+                {
+                    TransformedVertices.Add(new Vertex());
+                }
+            }
+
             CalculateFaceNormals();
         }
+
         public void CalculateFaceNormals()
         {
             foreach (Face face in Faces)
             {
                 if (face.Vertices.Count > 2)
                 {
-                    Vector3 v0 = face.Vertices[0].convertToVector();
-                    Vector3 v1 = face.Vertices[1].convertToVector();
-                    Vector3 v2 = face.Vertices[face.Vertices.Count - 1].convertToVector();
+                    Vector3 v0 = face.Vertices[0].ConvertToVector();
+                    Vector3 v1 = face.Vertices[1].ConvertToVector();
+                    Vector3 v2 = face.Vertices[face.Vertices.Count - 1].ConvertToVector();
 
                     face.Normal = v1.subtract(v0).crossProduct(v2.subtract(v1)).normalize();
                 }
             }
         }
+        
+        //TODO
+        public void SetBounds()
+        {
+            double highX = double.MinValue;
+            double lowX = double.MinValue;
+
+            double highY = double.MinValue;
+            double lowY = double.MaxValue;
+
+            double highZ = double.MinValue;
+            double lowZ = double.MaxValue;
+
+
+        }
+
         public override string ToString() { return _name; }
 
         #endregion
