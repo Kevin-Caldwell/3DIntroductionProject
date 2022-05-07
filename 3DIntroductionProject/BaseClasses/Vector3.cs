@@ -129,6 +129,11 @@ namespace _3DIntroductionProject
             return rotateZ(thetaRadians);
 
         }
+
+        public override string ToString()
+        {
+            return _x + " , " + _y + " , " + _z;
+        }
         #endregion
     }
 }

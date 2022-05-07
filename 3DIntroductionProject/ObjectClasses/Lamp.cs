@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _3DIntroductionProject.ObjectClasses
+namespace _3DIntroductionProject
 {
-    internal class LightSource : Object
+    internal class Lamp : Object
     {
         private double _intensity = 1;
         

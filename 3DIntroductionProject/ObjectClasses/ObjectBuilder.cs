@@ -170,10 +170,10 @@ namespace _3DIntroductionProject
                     ));
             }
 
-            faces.Add(new Face(cylinder.TransformedVertices[0],
+            faces.Add(new Face(cylinder.TransformedVertices[subdivisions],
+                cylinder.TransformedVertices[0],
                 cylinder.TransformedVertices[subdivisions - 1],
-                cylinder.TransformedVertices[2 * subdivisions - 1],
-                cylinder.TransformedVertices[subdivisions]));
+                cylinder.TransformedVertices[2 * subdivisions - 1]));
 
             cylinder.Edges = edges;
             cylinder.Faces = faces;

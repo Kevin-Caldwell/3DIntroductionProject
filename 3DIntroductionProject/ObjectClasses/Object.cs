@@ -12,6 +12,8 @@ namespace _3DIntroductionProject
         private string _name;
         private bool _renderable = true;
 
+        private Vertex _median;
+
         private List<Face> _faces;
         private List<Edge> _edges;
         private List<Vertex> _vertices;
@@ -96,9 +98,20 @@ namespace _3DIntroductionProject
                 UpdateTransformedVertices();
             }
         }
-
+        public Vertex Median { get { return _median; } }
         public bool Visible { get { return _renderable; } set { _renderable = value; } }
-        public List<Vertex> TransformedVertices { get { return _transformedVertices; } set { _transformedVertices = value; } }
+        public List<Vertex> TransformedVertices
+        {
+            get
+            {
+                return _transformedVertices;
+            }
+            set
+            {
+                UpdateMedian();
+                _transformedVertices = value;
+            }
+        }
         #endregion
 
         #region Constructors
@@ -147,7 +160,7 @@ namespace _3DIntroductionProject
 
         public void UpdateTransformedVertices()
         {
-            if(Vertices.Count == TransformedVertices.Count)
+            if (Vertices.Count == TransformedVertices.Count)
             {
                 for (int i = 0; i < Vertices.Count; i++)
                 {
@@ -157,13 +170,19 @@ namespace _3DIntroductionProject
             else
             {
                 TransformedVertices.Clear();
-                for(int i = 0; i < Vertices.Count; i++)
+                for (int i = 0; i < Vertices.Count; i++)
                 {
                     TransformedVertices.Add(new Vertex());
                 }
             }
 
+            for(int i = 0; i < _faces.Count; i++)
+            {
+                _faces[i].UpdateMedian();
+            }
+
             CalculateFaceNormals();
+            CalculateVertexNormals();
         }
 
         public void CalculateFaceNormals()
@@ -180,7 +199,26 @@ namespace _3DIntroductionProject
                 }
             }
         }
-        
+
+        public void CalculateVertexNormals()
+        {
+            foreach (Vertex v in _vertices)
+            {
+                Vector3 normal = new Vector3();
+                int faceCount = 0;
+
+                for (int i = 0; i < _faces.Count(); i++)
+                {
+                    if (_faces[i].Contains(v))
+                    {
+                        normal.add(_faces[i].Normal);
+                        faceCount++;
+                    }
+                }
+                v.Normal = normal.multiplyScalar((double) 1 / faceCount);
+            }
+        }
+
         //TODO
         public void SetBounds()
         {
@@ -198,6 +236,22 @@ namespace _3DIntroductionProject
 
         public override string ToString() { return _name; }
 
+
+        public void UpdateMedian()
+        {
+            Vertex NewMedian = new Vertex();
+
+            for (int i = 0; i < _transformedVertices.Count(); i++)
+            {
+                NewMedian.X += _transformedVertices[i].X;
+                NewMedian.Y += _transformedVertices[i].Y;
+                NewMedian.Z += _transformedVertices[i].Z;
+            }
+
+            _median = new Vertex(NewMedian.X / _transformedVertices.Count(),
+                NewMedian.X / _transformedVertices.Count(),
+                NewMedian.X / _transformedVertices.Count());
+        }
         #endregion
     }
 }

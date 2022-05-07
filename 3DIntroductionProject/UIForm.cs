@@ -43,8 +43,9 @@ namespace _3DIntroductionProject
 
             // Object initializations. These are the objects the program starts with.
             objectManager.registerObject(ObjectBuilder.CreateCylinder(2, 3, 32));
-            objectManager.registerObject(ObjectBuilder.CreateCylinder(2, 3, 16));
-            objectManager.GetObject(1).Translation = new Vector3(0, 1, 1);
+            //objectManager.registerObject(ObjectBuilder.CreatePlane(1));
+            //objectManager.registerObject(ObjectBuilder.CreateCylinder(2, 3, 16));
+            //objectManager.GetObject(1).Translation = new Vector3(0, 1, 1);
             //objectManager.registerObject(ObjectBuilder.CreatePlane(5));
 
             RenderU = new RenderUtility(objectManager, GraphicsDisplayPictureBox, FPSMonitor);
@@ -58,26 +59,19 @@ namespace _3DIntroductionProject
         /// <param name="e"></param>
         private void Clock_Tick(object sender, EventArgs e)
         {
+
             Object obj = objectManager.GetObject(0);
 
-            obj.Rotation.Z += 0.02;
-            //angle += 0.01;
-
-            //obj.Translation.Z = Math.Sin(angle) / 2;
+            obj.Rotation.Z += 0.004;
 
             objectManager.UpdateTransforms();
-            FPSMonitor.Log(0);
 
             RenderU.RefreshBitmap();
 
             FPSMonitor.FramePassed();
-            AverageFPSLabel.Text = FPSMonitor.FPS.ToString() + " FPS";
-
-            TimeLogLabel.Text = "";
-            
-            for(int i = 0; i < 5; i++)
+            if(FPSMonitor.FramesElapsed == 0)
             {
-                TimeLogLabel.Text += FPSMonitor.TimeSpentComparisons[i] + " , ";
+                AverageFPSLabel.Text = ((int)FPSMonitor.FPS).ToString() + " FPS";
             }
         }
 

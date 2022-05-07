@@ -14,46 +14,31 @@ namespace _3DIntroductionProject
         private int _frames = 0;
         private double _framesPerSecond = 0;
 
-        private long[] _monitors;
-        private double[] _timeSpentComparisons;
-
-        private int _refreshInterval = 10;
+        private int  _refreshInterval = 10;
         #endregion
 
         public double FPS { get { return _framesPerSecond; } }
-
-        public double[] TimeSpentComparisons { get { return _timeSpentComparisons; } }
+        public int FramesElapsed { get { return _frames; } }
 
         public Monitoring()
         {
             _startTime = NanoTime();
-            _monitors = new long[5];
-            _timeSpentComparisons = new double[5];
+            //_monitors = new long[5];
+            //_timeSpentComparisons = new double[5];
         }
 
         #region Instance Methods
         public void FramePassed()
         {
             _frames++;
-            _currentTime = NanoTime();
-            long timePassed = _currentTime - _startTime;
-            for(int i = 0; i < 5; i++)
+            if(_frames == _refreshInterval)
             {
-                _timeSpentComparisons[i] = (double)_monitors[0] / (double)timePassed;
+                _currentTime = NanoTime();
+                _framesPerSecond = 1000000000d * (double)_frames / (double)(_currentTime - _startTime);
+                
+                _frames = 0;
+                _startTime = NanoTime();
             }
-
-            if(_frames >= _refreshInterval)
-            {
-                _framesPerSecond = 1000000000 * _frames / (double)(_currentTime - _startTime);
-                Refresh();
-            }
-        }
-
-        public void Refresh()
-        {
-            _frames = 0;
-            _startTime = NanoTime();
-            _currentTime = NanoTime();
         }
 
         /// <summary>
@@ -66,18 +51,6 @@ namespace _3DIntroductionProject
             nano /= TimeSpan.TicksPerMillisecond;
             nano *= 100L;
             return nano;
-        }
-
-        public void Log(int index)
-        {
-            if(index == 0)
-            {
-                _monitors[0] += _startTime - NanoTime();
-            }
-            else
-            {
-                _monitors[index] += _monitors[index - 1] - NanoTime();
-            }
         }
         #endregion
     }

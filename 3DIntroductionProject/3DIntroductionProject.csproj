@@ -57,7 +57,7 @@
   <ItemGroup>
     <Compile Include="Monitoring.cs" />
     <Compile Include="ObjectClasses\Camera.cs" />
-    <Compile Include="ObjectClasses\LightSource.cs" />
+    <Compile Include="ObjectClasses\Lamp.cs" />
     <Compile Include="UIForm.cs">
       <SubType>Form</SubType>
     </Compile>

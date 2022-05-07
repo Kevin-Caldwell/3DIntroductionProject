@@ -18,6 +18,8 @@ namespace _3DIntroductionProject
         private Bitmap RenderBitmap;
         private ObjectManager ObjectStorage;
 
+        private List<Lamp> lightSources;
+
         private PictureBox RenderedPictureBox;
         private Graphics DrawingSurface;
 
@@ -56,12 +58,10 @@ namespace _3DIntroductionProject
             g.Clear(Color.White);
 
             RenderQueue = PrepareRenderingQueue(ObjectStorage.Objects);
-            monitor.Log(2);
-            BubbleSort(RenderQueue);
-            monitor.Log(3);
+            //MergeSort(RenderQueue.ToArray(), 0, RenderQueue.Count - 1, 0);
+            //BubbleSort(RenderQueue);
 
             RenderAllObjects(RenderQueue, g);
-            monitor.Log(4);
 
             isRendering = false;
             RenderedPictureBox.Refresh();
@@ -106,16 +106,16 @@ namespace _3DIntroductionProject
                 Pen pen;
 
                 //RenderedPictureBox.Refresh();
-                //Thread.Sleep(300);
+                //Thread.Sleep(100);
                 //Application.DoEvents();
-                
+
                 if (obj is Vertex v)
                 {
                     pen = new Pen(Settings.VERTEX_COLOR);
 
                     PointF point = ViewportCamera.ToScreen(v.ConvertToVector());
                     pen.Width = 5;
-                    g.FillEllipse(new SolidBrush(Settings.WIREFRAME_COLOR), point.X, point.Y, 2, 2);
+                    g.FillEllipse(new SolidBrush(Settings.WIREFRAME_COLOR), point.X - 4, point.Y - 4, 8, 8);
 
                 }
                 else if (obj is Edge edge)
@@ -131,14 +131,30 @@ namespace _3DIntroductionProject
                 }
                 else if (obj is Face face)
                 {
-                    PointF[] points = new PointF[face.Vertices.Count];
-
-                    for (int i = 0; i < face.Vertices.Count; i++)
+                    if (ViewportCamera.Basis.Forward.dotProduct(face.Normal) < 0.1)
                     {
-                        points[i] = ViewportCamera.ToScreen(face.Vertices[i].ConvertToVector());
+                        PointF[] points = new PointF[face.Vertices.Count];
+
+                        for (int i = 0; i < face.Vertices.Count; i++)
+                        {
+                            points[i] = ViewportCamera.ToScreen(face.Vertices[i].ConvertToVector());
+                        }
+
+                        double scale = Math.Abs(ViewportCamera.Basis.Forward.subtract(face.Median).dotProduct(face.Normal));
+                        scale = scale < 1 ? scale : 1;
+
+                        Color faceColor = Color.FromArgb(1, (int)(Settings.FILL_COLOR.R * scale),
+                            (int)(Settings.FILL_COLOR.G * scale),
+                           (int)(Settings.FILL_COLOR.B * scale));
+
+                        g.FillPolygon(new SolidBrush(Settings.FILL_COLOR), points);
                     }
 
-                    g.FillPolygon(new SolidBrush(Settings.FILL_COLOR), points);
+                    PointF p1 = ViewportCamera.ToScreen(face.Median.add(face.Normal));
+                    PointF p2 = ViewportCamera.ToScreen(face.Median);
+
+
+                    g.DrawLine(new Pen(Settings.VERTEX_COLOR), p1, p2);
                 }
             }
         }
@@ -163,6 +179,7 @@ namespace _3DIntroductionProject
             }
         }
 
+
         /// <summary>
         /// </summary>
         /// <param name="obj">Vertex, Edge or Face object</param>
@@ -178,7 +195,7 @@ namespace _3DIntroductionProject
             else if (obj is Edge edge)
             {
                 Vertex midPoint = new Vertex();
-                (midPoint.X, midPoint.Y, midPoint.Z) = (midPoint.Y, midPoint.Z, midPoint.X); 
+                (midPoint.X, midPoint.Y, midPoint.Z) = (midPoint.Y, midPoint.Z, midPoint.X);
 
                 midPoint.X += edge.A.X;
                 midPoint.Y += edge.A.Y;
@@ -216,10 +233,10 @@ namespace _3DIntroductionProject
 
             return x;
         }
-/*        private double Minimum(double x, double y)
-        {
-            return x < y ? x : y;
-        }*/
+        /*        private double Minimum(double x, double y)
+                {
+                    return x < y ? x : y;
+                }*/
         private double PointDistanceFromOrigin(Vector3 v)
         {
             return Math.Sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z);

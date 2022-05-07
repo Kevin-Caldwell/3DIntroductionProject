@@ -78,7 +78,7 @@
             // 
             // ClockTimer
             // 
-            this.ClockTimer.Interval = 4;
+            this.ClockTimer.Interval = 1;
             this.ClockTimer.Tick += new System.EventHandler(this.Clock_Tick);
             // 
             // AverageFPSLabel
