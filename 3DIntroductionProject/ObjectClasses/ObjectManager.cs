@@ -49,7 +49,7 @@ namespace _3DIntroductionProject
             _selectedObject = newObject;
         }
 
-        public void unregisterObject(string objectName)
+        public void UnregisterObject(string objectName)
         {
             for (int i = 0; i < Size; i++)
             {

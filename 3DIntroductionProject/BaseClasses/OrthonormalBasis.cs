@@ -29,24 +29,24 @@ namespace _3DIntroductionProject
         #region Instance Methods
         public void generateBasis(Vector3 forward, Vector3 up)
         {
-            _forward = forward.normalize();
-            _right = forward.crossProduct(up).normalize();
-            _up = _right.crossProduct(_forward).normalize();
+            _forward = forward.Normalize();
+            _right = forward.CrossProduct(up).Normalize();
+            _up = _right.CrossProduct(_forward).Normalize();
         }
         public Vector3 projectOntoAxes(Vector3 v, bool isPosition)
         {
             if (isPosition)
             {
-                v = v.subtract(_position);
+                v = v.Subtract(_position);
             }
 
             Vector3 projection = new Vector3();
 
-            projection.X = _forward.dotProduct(v);
-            projection.Y = _right.dotProduct(v);
-            projection.Z = _up.dotProduct(v);
+            projection.X = _forward.DotProduct(v);
+            projection.Y = _right.DotProduct(v);
+            projection.Z = _up.DotProduct(v);
 
-            v.setVector(projection);
+            v.SetVector(projection);
             
             return projection;
         }

@@ -13,5 +13,7 @@ namespace _3DIntroductionProject
         public static readonly Color WIREFRAME_COLOR = Color.Black;
         public static readonly Color POSITION_COLOR = Color.Teal;
         public static readonly Color VERTEX_COLOR = Color.Red;
+        public static readonly Color EDGE_COLOR = Color.Blue;
+        public static readonly Vector3 CAMERA_STARTING_LOCATION = new Vector3(20, 0, 2);
     }
 }

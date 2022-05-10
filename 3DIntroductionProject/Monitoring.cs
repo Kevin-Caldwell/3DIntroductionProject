@@ -14,7 +14,7 @@ namespace _3DIntroductionProject
         private int _frames = 0;
         private double _framesPerSecond = 0;
 
-        private int  _refreshInterval = 10;
+        private readonly int  _refreshInterval = 50;
         #endregion
 
         public double FPS { get { return _framesPerSecond; } }

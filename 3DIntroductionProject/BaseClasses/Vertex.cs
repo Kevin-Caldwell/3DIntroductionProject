@@ -45,6 +45,21 @@ namespace _3DIntroductionProject
         }
         #endregion
 
+        #region Operation Definitions
+        public static Vertex operator +(Vertex a, Vertex b)
+        {
+            return new Vertex(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        }
+        public static Vertex operator - (Vertex a, Vertex b)
+        {
+            return new Vertex(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        }
+        public static Vertex operator / (Vertex a, double v)
+        {
+            return new Vertex(a.X / v, a.Y / v, a.Z / v);
+        }
+        #endregion
+
         #region Instance Methods
         public Vector3 ConvertToVector()
         {
@@ -56,7 +71,6 @@ namespace _3DIntroductionProject
             this.Y = v.Y;
             this.Z = v.Z;
         }
-
         public override bool Equals(object obj)
         {
             bool equal = false;
@@ -69,10 +83,13 @@ namespace _3DIntroductionProject
             }
             return equal;
         }
-
         public override string ToString()
         {
             return _x + " , " + _y + " , " + _z;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
         #endregion
     }

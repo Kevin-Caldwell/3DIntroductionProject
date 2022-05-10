@@ -46,49 +46,49 @@ namespace _3DIntroductionProject
         #endregion
 
         #region Instance Methods
-        public void setVector(Vector3 v)
+        public void SetVector(Vector3 v)
         {
             this.X = v.X;
             this.Y = v.Y;
             this.Z = v.Z;
         }
-        public Vector3 add(Vector3 v)
+        public Vector3 Add(Vector3 v)
         {
             return new Vector3(_x + v.X, _y + v.Y, _z + v.Z);
         }
-        public Vector3 subtract(Vector3 v)
+        public Vector3 Subtract(Vector3 v)
         {
             return new Vector3(_x - v.X, _y - v.Y, _z - v.Z);
         }
-        public Vector3 normalize()
+        public Vector3 Normalize()
         {
-            double mag = magnitude();
+            double mag = Magnitude();
             return new Vector3(_x / mag, _y / mag, _z / mag);
         }
-        public Vector3 multiplyScalar(double a)
+        public Vector3 MultiplyScalar(double a)
         {
             _x *= a;
             _y *= a;
             _z *= a;
             return this;
         }
-        public double dotProduct(Vector3 v)
+        public double DotProduct(Vector3 v)
         {
             return _x * v.X + _y * v.Y + _z * v.Z;
         }
-        public double magnitude()
+        public double Magnitude()
         {
             return Math.Sqrt(_x * _x + _y * _y + _z * _z);
         }
-        public double squareOfMagnitude()
+        public double SquareOfMagnitude()
         {
             return (_x * _x + _y * _y + _z * _z);
         }
-        public Vector3 crossProduct(Vector3 v)
+        public Vector3 CrossProduct(Vector3 v)
         {
             return new Vector3(_y * v.Z + _z * v.Y, _x * v.Z + _x * v.Y, _x * v.Y + _y * v.X);
         }
-        public Vector3 rotateX(double thetaRadians)
+        public Vector3 RotateX(double thetaRadians)
         {
             double x = _x;
             double y = Math.Cos(thetaRadians) * _y - Math.Sin(thetaRadians) * _z;
@@ -96,13 +96,13 @@ namespace _3DIntroductionProject
 
             return new Vector3(x, y, z);
         }
-        public Vector3 rotateDegreesX(double thetaDegrees)
+        public Vector3 RotateDegreesX(double thetaDegrees)
         {
             double thetaRadians = thetaDegrees * Math.PI / 180;
-            return rotateX(thetaRadians);
+            return RotateX(thetaRadians);
 
         }
-        public Vector3 rotateY(double thetaRadians)
+        public Vector3 RotateY(double thetaRadians)
         {
             double x = Math.Sin(thetaRadians) * _z + Math.Cos(thetaRadians) * _x;
             double y = _y;
@@ -110,12 +110,12 @@ namespace _3DIntroductionProject
 
             return new Vector3(x, y, z);
         }
-        public Vector3 rotateDegreesY(double thetaDegrees)
+        public Vector3 RotateDegreesY(double thetaDegrees)
         {
             double thetaRadians = thetaDegrees * Math.PI / 180;
-            return rotateY(thetaRadians);
+            return RotateY(thetaRadians);
         }
-        public Vector3 rotateZ(double thetaRadians)
+        public Vector3 RotateZ(double thetaRadians)
         {
             double x = Math.Cos(thetaRadians) * _x - Math.Sin(thetaRadians) * _y;
             double y = Math.Sin(thetaRadians) * _x + Math.Cos(thetaRadians) * _y;
@@ -123,10 +123,10 @@ namespace _3DIntroductionProject
 
             return new Vector3(x, y, z);
         }
-        public Vector3 rotateDegreesZ(double thetaDegrees)
+        public Vector3 RotateDegreesZ(double thetaDegrees)
         {
             double thetaRadians = thetaDegrees * Math.PI / 180;
-            return rotateZ(thetaRadians);
+            return RotateZ(thetaRadians);
 
         }
 

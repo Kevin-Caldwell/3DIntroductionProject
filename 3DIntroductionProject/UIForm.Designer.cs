@@ -62,13 +62,13 @@
             // 
             this.GraphicsDisplayPictureBox.Location = new System.Drawing.Point(12, 12);
             this.GraphicsDisplayPictureBox.Name = "GraphicsDisplayPictureBox";
-            this.GraphicsDisplayPictureBox.Size = new System.Drawing.Size(677, 660);
+            this.GraphicsDisplayPictureBox.Size = new System.Drawing.Size(1016, 660);
             this.GraphicsDisplayPictureBox.TabIndex = 0;
             this.GraphicsDisplayPictureBox.TabStop = false;
             // 
             // TimerButton
             // 
-            this.TimerButton.Location = new System.Drawing.Point(702, 168);
+            this.TimerButton.Location = new System.Drawing.Point(1034, 168);
             this.TimerButton.Name = "TimerButton";
             this.TimerButton.Size = new System.Drawing.Size(76, 23);
             this.TimerButton.TabIndex = 6;
@@ -84,7 +84,7 @@
             // AverageFPSLabel
             // 
             this.AverageFPSLabel.AutoSize = true;
-            this.AverageFPSLabel.Location = new System.Drawing.Point(699, 659);
+            this.AverageFPSLabel.Location = new System.Drawing.Point(1281, 659);
             this.AverageFPSLabel.Name = "AverageFPSLabel";
             this.AverageFPSLabel.Size = new System.Drawing.Size(61, 13);
             this.AverageFPSLabel.TabIndex = 17;
@@ -95,7 +95,7 @@
             this.ObjectDataGridView.AllowUserToAddRows = false;
             this.ObjectDataGridView.AllowUserToDeleteRows = false;
             this.ObjectDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ObjectDataGridView.Location = new System.Drawing.Point(702, 12);
+            this.ObjectDataGridView.Location = new System.Drawing.Point(1034, 12);
             this.ObjectDataGridView.Name = "ObjectDataGridView";
             this.ObjectDataGridView.Size = new System.Drawing.Size(240, 150);
             this.ObjectDataGridView.TabIndex = 18;
@@ -218,7 +218,7 @@
             this.groupBox3.Controls.Add(this.TranslationGroupBox);
             this.groupBox3.Controls.Add(this.groupBox2);
             this.groupBox3.Controls.Add(this.groupBox1);
-            this.groupBox3.Location = new System.Drawing.Point(702, 229);
+            this.groupBox3.Location = new System.Drawing.Point(1034, 229);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(308, 148);
             this.groupBox3.TabIndex = 31;
@@ -232,7 +232,7 @@
             // TimeLogLabel
             // 
             this.TimeLogLabel.AutoSize = true;
-            this.TimeLogLabel.Location = new System.Drawing.Point(742, 563);
+            this.TimeLogLabel.Location = new System.Drawing.Point(1268, 646);
             this.TimeLogLabel.Name = "TimeLogLabel";
             this.TimeLogLabel.Size = new System.Drawing.Size(74, 13);
             this.TimeLogLabel.TabIndex = 32;

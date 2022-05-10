@@ -195,7 +195,7 @@ namespace _3DIntroductionProject
                     Vector3 v1 = face.Vertices[1].ConvertToVector();
                     Vector3 v2 = face.Vertices[face.Vertices.Count - 1].ConvertToVector();
 
-                    face.Normal = v1.subtract(v0).crossProduct(v2.subtract(v1)).normalize();
+                    face.Normal = v1.Subtract(v0).CrossProduct(v2.Subtract(v1)).Normalize();
                 }
             }
         }
@@ -211,16 +211,16 @@ namespace _3DIntroductionProject
                 {
                     if (_faces[i].Contains(v))
                     {
-                        normal.add(_faces[i].Normal);
+                        normal.Add(_faces[i].Normal);
                         faceCount++;
                     }
                 }
-                v.Normal = normal.multiplyScalar((double) 1 / faceCount);
+                v.Normal = normal.MultiplyScalar((double) 1 / faceCount);
             }
         }
 
         //TODO
-        public void SetBounds()
+/*        public void SetBounds()
         {
             double highX = double.MinValue;
             double lowX = double.MinValue;
@@ -233,7 +233,7 @@ namespace _3DIntroductionProject
 
 
         }
-
+*/
         public override string ToString() { return _name; }
 
 

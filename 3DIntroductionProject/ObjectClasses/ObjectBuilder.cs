@@ -11,7 +11,7 @@ namespace _3DIntroductionProject
     {
         public static Camera CreateDefaultCamera(Point screenSize)
         {
-            Camera camera = new Camera(new Vector3(1, 0, 0), new Vector3(0, 0, 1), new Vector3(9, 0, 3), 70, screenSize)
+            Camera camera = new Camera(new Vector3(1, 0, 0), new Vector3(0, 0, 1), Settings.CAMERA_STARTING_LOCATION, 70, screenSize)
             {
                 Name = "Camera"
             };

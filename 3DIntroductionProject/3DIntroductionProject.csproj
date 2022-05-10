@@ -58,7 +58,11 @@
     <Compile Include="Monitoring.cs" />
     <Compile Include="ObjectClasses\Camera.cs" />
     <Compile Include="ObjectClasses\Lamp.cs" />
+    <Compile Include="RenderingClasses\BitmapDrawing.cs" />
     <Compile Include="RenderingClasses\ObjectPackager.cs" />
+    <Compile Include="RenderingClasses\RenderingModes\RenderMode.cs" />
+    <Compile Include="RenderingClasses\RenderingModes\SolidRenderMode.cs" />
+    <Compile Include="RenderingClasses\RenderingModes\WireframeRenderMode.cs" />
     <Compile Include="UIForm.cs">
       <SubType>Form</SubType>
     </Compile>

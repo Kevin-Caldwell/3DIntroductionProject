@@ -41,14 +41,9 @@ namespace _3DIntroductionProject
             Camera viewportCam = ObjectBuilder.CreateDefaultCamera(new Point(_screenWidth, _screenHeight));
             objectManager = new ObjectManager(ObjectDataGridView, viewportCam);
 
-            // Object initializations. These are the objects the program starts with.
-            objectManager.registerObject(ObjectBuilder.CreateCylinder(2, 3, 32));
-            //objectManager.registerObject(ObjectBuilder.CreatePlane(1));
-            //objectManager.registerObject(ObjectBuilder.CreateCylinder(2, 3, 16));
-            //objectManager.GetObject(1).Translation = new Vector3(0, 1, 1);
-            //objectManager.registerObject(ObjectBuilder.CreatePlane(5));
+            objectManager.registerObject(ObjectBuilder.CreateCylinder(2, 3, 3));
 
-            RenderU = new RenderUtility(objectManager, GraphicsDisplayPictureBox, FPSMonitor);
+            RenderU = new RenderUtility(objectManager, GraphicsDisplayPictureBox);
         }
         #endregion
 
@@ -59,14 +54,11 @@ namespace _3DIntroductionProject
         /// <param name="e"></param>
         private void Clock_Tick(object sender, EventArgs e)
         {
-
             Object obj = objectManager.GetObject(0);
-
-            obj.Rotation.Z += 0.004;
+            obj.Rotation.Z += 0.01;
 
             objectManager.UpdateTransforms();
-
-            RenderU.RefreshBitmap();
+            RenderU.Refresh();
 
             FPSMonitor.FramePassed();
             if(FPSMonitor.FramesElapsed == 0)
@@ -74,47 +66,39 @@ namespace _3DIntroductionProject
                 AverageFPSLabel.Text = ((int)FPSMonitor.FPS).ToString() + " FPS";
             }
         }
-
         private void UIForm_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == 'W')
             {
-                objectManager.GetObject("Cylinder").Translation.multiplyScalar(4d);
+                objectManager.GetObject("Cylinder").Translation.MultiplyScalar(4d);
             }
         }
-
         private void ObjectDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             objectManager.SelectedObject = objectManager.GetObject(e.RowIndex);
         }
-
         private void ObjectDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             objectManager.GetObject(e.RowIndex).Name = e.ToString();
         }
-
         private void TranslationTextBox_TextChanged(object sender, EventArgs e)
         {
             if (TranslationXTextBox.Text.Length > 0)
             {
-                double x = objectManager.SelectedObject.Translation.X;
-                double.TryParse(TranslationXTextBox.Text, out x);
+                double.TryParse(TranslationXTextBox.Text, out double x);
                 objectManager.SelectedObject.Translation.X = x;
             }
             if (TranslationYTextBox.Text.Length > 0)
             {
-                double y = objectManager.SelectedObject.Translation.Y;
-                double.TryParse(TranslationYTextBox.Text, out y);
+                double.TryParse(TranslationYTextBox.Text, out double y);
                 objectManager.SelectedObject.Translation.Y = y;
             }
             if (TranslationZTextBox.Text.Length > 0)
             {
-                double z = objectManager.SelectedObject.Translation.Z;
-                double.TryParse(TranslationZTextBox.Text, out z);
+                double.TryParse(TranslationZTextBox.Text, out double z);
                 objectManager.SelectedObject.Translation.Z = z;
             }
         }
-
         private void TimerButton_Click(object sender, EventArgs e)
         {
             if (ClockTimer.Enabled) ClockTimer.Stop();
