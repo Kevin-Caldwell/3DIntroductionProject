@@ -21,6 +21,7 @@ namespace _3DIntroductionProject
         private readonly RenderUtility RenderU;
         private readonly ObjectManager objectManager;   
         private readonly Monitoring FPSMonitor;
+        private double i = 0;
 
         #endregion
 
@@ -28,7 +29,6 @@ namespace _3DIntroductionProject
         public UIForm()
         {
             FPSMonitor = new Monitoring();
-            // Generated Code
             InitializeComponent();
 
             // Strores values for the PictureBox's Height and Width
@@ -41,7 +41,7 @@ namespace _3DIntroductionProject
             Camera viewportCam = ObjectBuilder.CreateDefaultCamera(new Point(_screenWidth, _screenHeight));
             objectManager = new ObjectManager(ObjectDataGridView, viewportCam);
 
-            objectManager.registerObject(ObjectBuilder.CreateCylinder(2, 3, 3));
+            objectManager.RegisterObject(ObjectBuilder.CreateCube(2));
 
             RenderU = new RenderUtility(objectManager, GraphicsDisplayPictureBox);
         }
@@ -54,23 +54,45 @@ namespace _3DIntroductionProject
         /// <param name="e"></param>
         private void Clock_Tick(object sender, EventArgs e)
         {
-            Object obj = objectManager.GetObject(0);
+            Object obj = objectManager.SelectedObject;
             obj.Rotation.Z += 0.01;
+            //objectManager.RegisterObject(ObjectBuilder.CreateCube(i));
 
             objectManager.UpdateTransforms();
             RenderU.Refresh();
-
             FPSMonitor.FramePassed();
             if(FPSMonitor.FramesElapsed == 0)
             {
+                //objectManager.RegisterObject(ObjectBuilder.CreateCube(i));
                 AverageFPSLabel.Text = ((int)FPSMonitor.FPS).ToString() + " FPS";
+                i += 0.1;
             }
         }
         private void UIForm_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == 'W')
+            if (e.KeyChar == 'w')
             {
-                objectManager.GetObject("Cylinder").Translation.MultiplyScalar(4d);
+                objectManager.GetObject(0).Translation.X -= 0.1d;
+            }
+            if (e.KeyChar == 's')
+            {
+                objectManager.GetObject(0).Translation.X += 0.1d;
+            }
+            if (e.KeyChar == 'a')
+            {
+                objectManager.GetObject(0).Translation.Y -= 0.1d;
+            }
+            if (e.KeyChar == 'd')
+            {
+                objectManager.GetObject(0).Translation.Y += 0.1d;
+            }
+            if (e.KeyChar == 'q')
+            {
+                objectManager.GetObject(0).Translation.Z -= 0.1d;
+            }
+            if (e.KeyChar == 'e')
+            {
+                objectManager.GetObject(0).Translation.Z += 0.1d;
             }
         }
         private void ObjectDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -99,10 +121,72 @@ namespace _3DIntroductionProject
                 objectManager.SelectedObject.Translation.Z = z;
             }
         }
+
+        private void ChangeColorButton_Click(object sender, EventArgs e)
+        {
+            FaceColorDialog.ShowDialog();
+            Settings.FILL_COLOR = FaceColorDialog.Color;
+        }
+
+        private void ObjectSpawnButton_Click(object sender, EventArgs e)
+        {
+            switch (ShapeSelectionComboBox.SelectedIndex)
+            {
+                case 0:
+                    objectManager.RegisterObject(ObjectBuilder.CreateCube(1));
+                    break;
+                case 1:
+                    objectManager.RegisterObject(ObjectBuilder.CreateCylinder(1, 2, 32));
+                    break;
+                case 2:
+                    objectManager.RegisterObject(ObjectBuilder.CreatePlane(1));
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Rotation_Update(object sender, EventArgs e)
+        {
+            if (RotationXTextBox.Text.Length > 0)
+            {
+                double.TryParse(RotationXTextBox.Text, out double x);
+                objectManager.SelectedObject.Rotation.X = x * Math.PI / 180;
+            }
+            if (RotationYTextBox.Text.Length > 0)
+            {
+                double.TryParse(RotationYTextBox.Text, out double y);
+                objectManager.SelectedObject.Rotation.Y = y * Math.PI / 180;
+            }
+            if (RotationZTextBox.Text.Length > 0)
+            {
+                double.TryParse(RotationZTextBox.Text, out double z);
+                objectManager.SelectedObject.Rotation.Z = z * Math.PI / 180;
+            }
+        }
+
+        private void Scale_Update(object sender, EventArgs e)
+        {
+            if (ScaleXTextBox.Text.Length > 0)
+            {
+                double.TryParse(ScaleXTextBox.Text, out double x);
+                objectManager.SelectedObject.Scale.X = x;
+            }
+            if (ScaleYTextBox.Text.Length > 0)
+            {
+                double.TryParse(ScaleYTextBox.Text, out double y);
+                objectManager.SelectedObject.Scale.Y = y;
+            }
+            if (ScaleZTextBox.Text.Length > 0)
+            {
+                double.TryParse(ScaleZTextBox.Text, out double z);
+                objectManager.SelectedObject.Scale.Z = z;
+            }
+        }
+
         private void TimerButton_Click(object sender, EventArgs e)
         {
-            if (ClockTimer.Enabled) ClockTimer.Stop();
-            else ClockTimer.Start();
+
         }
     }
 }

@@ -11,5 +11,7 @@ namespace _3DIntroductionProject
         private double _intensity = 1;
         
         public double Intensity { get { return _intensity; } set { _intensity = value; } }
+
+        public Lamp() : base() => _renderable = false;
     }
 }

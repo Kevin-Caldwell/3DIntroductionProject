@@ -10,14 +10,14 @@ namespace _3DIntroductionProject
     {
         #region Fields
         private string _name;
-        private bool _renderable = true;
+        protected bool _renderable = true;
 
         private Vertex _median;
 
         private List<Face> _faces;
         private List<Edge> _edges;
         private List<Vertex> _vertices;
-
+    
         private Transform _transform;
         private List<Vertex> _transformedVertices;
         #endregion
@@ -195,7 +195,7 @@ namespace _3DIntroductionProject
                     Vector3 v1 = face.Vertices[1].ConvertToVector();
                     Vector3 v2 = face.Vertices[face.Vertices.Count - 1].ConvertToVector();
 
-                    face.Normal = v1.Subtract(v0).CrossProduct(v2.Subtract(v1)).Normalize();
+                    face.Normal = (v1 - v0).CrossProduct(v2 - v1).Normalize();
                 }
             }
         }
@@ -211,16 +211,16 @@ namespace _3DIntroductionProject
                 {
                     if (_faces[i].Contains(v))
                     {
-                        normal.Add(_faces[i].Normal);
+                        normal += _faces[i].Normal;
                         faceCount++;
                     }
                 }
-                v.Normal = normal.MultiplyScalar((double) 1 / faceCount);
+                v.Normal = normal * (double) 1 / faceCount;
             }
         }
 
         //TODO
-/*        public void SetBounds()
+        public void SetBounds()
         {
             double highX = double.MinValue;
             double lowX = double.MinValue;
@@ -233,7 +233,7 @@ namespace _3DIntroductionProject
 
 
         }
-*/
+
         public override string ToString() { return _name; }
 
 

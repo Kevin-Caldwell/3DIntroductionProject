@@ -12,7 +12,7 @@ namespace _3DIntroductionProject
         #region Fields
         private List<Object> _objects;
         private int _size;
-        private DataGridView _grid;
+        private readonly DataGridView _grid;
         private Camera _camera;
 
         private Object _selectedObject;
@@ -36,14 +36,14 @@ namespace _3DIntroductionProject
         #endregion
 
         #region Instance Methods
-        public void registerObject(Object newObject)
+        public void RegisterObject(Object newObject)
         {
             _objects.Add(newObject);
             if (newObject.Name.Equals("") || newObject.Name == null)
             {
                 newObject.Name = "Object";
             }
-            assignName(newObject);
+            AssignName(newObject);
             _grid.Rows.Add(newObject.Name);
             _size++;
             _selectedObject = newObject;
@@ -80,7 +80,7 @@ namespace _3DIntroductionProject
             return requiredObject;
         }
 
-        public void assignName(Object unnamedObject)
+        public void AssignName(Object unnamedObject)
         {
             int index = 0;
             for (int i = 0; i < _objects.Count; i++)
@@ -97,7 +97,7 @@ namespace _3DIntroductionProject
             }
         }
 
-        public List<string> getObjectNameList()
+        public List<string> GetObjectNameList()
         {
             List<string> objectNameList = new List<string>();
             for (int i = 0; i < _size; i++)

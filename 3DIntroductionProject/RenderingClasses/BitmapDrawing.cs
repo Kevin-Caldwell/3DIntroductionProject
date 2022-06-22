@@ -11,6 +11,7 @@ namespace _3DIntroductionProject
     internal class BitmapDrawing
     {
         private readonly int _screenWidth, _screenHeight;
+        double angle = 0;
 
         private Bitmap RenderBitmap;
 
@@ -38,6 +39,11 @@ namespace _3DIntroductionProject
         private void PictureBox_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.DrawImage(RenderBitmap, 0, 0);
+        }
+
+        public void SetColorOfPixel(Point pixel, Color color)
+        {
+            RenderBitmap.SetPixel(pixel.X, pixel.Y, color);
         }
     }
 }

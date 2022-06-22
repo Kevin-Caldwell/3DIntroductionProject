@@ -45,6 +45,7 @@ namespace _3DIntroductionProject
             _basis = new OrthonormalBasis(forward, up);
             _basis.Position = position;
             _basis.generateBasis(forward, up);
+
             _screenSize = screenSize;
             _aspectRatio = ((double)_screenSize.X) / _screenSize.Y;
             _halfScreenSize = new Point(_screenSize.X / 2, _screenSize.Y / 2);
@@ -69,7 +70,7 @@ namespace _3DIntroductionProject
         /// <returns> A PointF Object </returns>
         public PointF ToScreen(Vector3 proj)
         {
-            proj = ToCameraCoordinates(proj);
+            proj = _basis.ProjectOntoAxes(proj, true);
             PointF screen = new PointF();
 
             double x = proj.X, y = proj.Y, z = proj.Z;
@@ -81,16 +82,6 @@ namespace _3DIntroductionProject
             }
 
             return screen;
-        }
-
-        /// <summary>
-        /// Converts a Vector3 relative 
-        /// </summary>
-        /// <param name="v"></param>
-        /// <returns></returns>
-        public Vector3 ToCameraCoordinates(Vector3 v)
-        {
-            return _basis.projectOntoAxes(v, true);
         }
         #endregion
     }

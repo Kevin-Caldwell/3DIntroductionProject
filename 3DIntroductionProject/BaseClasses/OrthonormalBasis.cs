@@ -33,11 +33,11 @@ namespace _3DIntroductionProject
             _right = forward.CrossProduct(up).Normalize();
             _up = _right.CrossProduct(_forward).Normalize();
         }
-        public Vector3 projectOntoAxes(Vector3 v, bool isPosition)
+        public Vector3 ProjectOntoAxes(Vector3 v, bool isPosition)
         {
             if (isPosition)
             {
-                v = v.Subtract(_position);
+                v -= _position;
             }
 
             Vector3 projection = new Vector3();

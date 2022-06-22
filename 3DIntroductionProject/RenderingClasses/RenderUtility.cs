@@ -19,6 +19,8 @@ namespace _3DIntroductionProject
         private readonly RenderMode renderTool;
         private readonly BitmapDrawing bitmapDrawing;
 
+        private readonly ObjectPackager packager;
+
         public bool isRendering = false;
         #endregion
 
@@ -29,14 +31,16 @@ namespace _3DIntroductionProject
             ViewportCamera = OM.ViewportCamera;
 
             bitmapDrawing = new BitmapDrawing(pictureBox);
-            renderTool = new WireframeRenderMode(bitmapDrawing.Graphics, ViewportCamera);
+            //renderTool = new WireframeRenderMode(bitmapDrawing.Graphics, ViewportCamera);
+            renderTool = new SolidRenderMode(bitmapDrawing.Graphics, ViewportCamera);
+            packager = new ObjectPackager();
         }
         #endregion
 
         #region Instance Methods
         public void Refresh()
         {
-            List<object> RenderQueue = new ObjectPackager(ObjectStorage).PrepareRenderingQueue(ObjectStorage.Objects);
+            List<object> RenderQueue = packager.PrepareRenderingQueue(ObjectStorage.Objects);
             renderTool.Render(RenderQueue);
             bitmapDrawing.RefreshBitmap();
         }

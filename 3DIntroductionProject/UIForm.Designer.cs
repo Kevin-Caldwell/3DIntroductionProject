@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.GraphicsDisplayPictureBox = new System.Windows.Forms.PictureBox();
-            this.TimerButton = new System.Windows.Forms.Button();
             this.ClockTimer = new System.Windows.Forms.Timer(this.components);
             this.AverageFPSLabel = new System.Windows.Forms.Label();
             this.ObjectDataGridView = new System.Windows.Forms.DataGridView();
@@ -47,8 +46,13 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.cubeFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.TimeLogLabel = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.FaceColorDialog = new System.Windows.Forms.ColorDialog();
+            this.ChangeColorButton = new System.Windows.Forms.Button();
+            this.ShapeSelectionComboBox = new System.Windows.Forms.ComboBox();
+            this.ObjectSpawnButton = new System.Windows.Forms.Button();
+            this.cubeFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.GraphicsDisplayPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ObjectDataGridView)).BeginInit();
             this.TranslationGroupBox.SuspendLayout();
@@ -66,18 +70,9 @@
             this.GraphicsDisplayPictureBox.TabIndex = 0;
             this.GraphicsDisplayPictureBox.TabStop = false;
             // 
-            // TimerButton
-            // 
-            this.TimerButton.Location = new System.Drawing.Point(1034, 168);
-            this.TimerButton.Name = "TimerButton";
-            this.TimerButton.Size = new System.Drawing.Size(76, 23);
-            this.TimerButton.TabIndex = 6;
-            this.TimerButton.Text = "Start Motion";
-            this.TimerButton.UseVisualStyleBackColor = true;
-            this.TimerButton.Click += new System.EventHandler(this.TimerButton_Click);
-            // 
             // ClockTimer
             // 
+            this.ClockTimer.Enabled = true;
             this.ClockTimer.Interval = 1;
             this.ClockTimer.Tick += new System.EventHandler(this.Clock_Tick);
             // 
@@ -118,6 +113,7 @@
             this.RotationXTextBox.Size = new System.Drawing.Size(78, 20);
             this.RotationXTextBox.TabIndex = 20;
             this.RotationXTextBox.Text = "0";
+            this.RotationXTextBox.TextChanged += new System.EventHandler(this.Rotation_Update);
             // 
             // ScaleXTextBox
             // 
@@ -126,6 +122,7 @@
             this.ScaleXTextBox.Size = new System.Drawing.Size(78, 20);
             this.ScaleXTextBox.TabIndex = 21;
             this.ScaleXTextBox.Text = "1";
+            this.ScaleXTextBox.TextChanged += new System.EventHandler(this.Scale_Update);
             // 
             // ScaleYTextBox
             // 
@@ -134,6 +131,7 @@
             this.ScaleYTextBox.Size = new System.Drawing.Size(78, 20);
             this.ScaleYTextBox.TabIndex = 24;
             this.ScaleYTextBox.Text = "1";
+            this.ScaleYTextBox.TextChanged += new System.EventHandler(this.Scale_Update);
             // 
             // RotationYTextBox
             // 
@@ -142,6 +140,7 @@
             this.RotationYTextBox.Size = new System.Drawing.Size(78, 20);
             this.RotationYTextBox.TabIndex = 23;
             this.RotationYTextBox.Text = "0";
+            this.RotationYTextBox.TextChanged += new System.EventHandler(this.Rotation_Update);
             // 
             // TranslationYTextBox
             // 
@@ -159,6 +158,7 @@
             this.ScaleZTextBox.Size = new System.Drawing.Size(78, 20);
             this.ScaleZTextBox.TabIndex = 27;
             this.ScaleZTextBox.Text = "1";
+            this.ScaleZTextBox.TextChanged += new System.EventHandler(this.Scale_Update);
             // 
             // RotationZTextBox
             // 
@@ -167,6 +167,7 @@
             this.RotationZTextBox.Size = new System.Drawing.Size(78, 20);
             this.RotationZTextBox.TabIndex = 26;
             this.RotationZTextBox.Text = "0";
+            this.RotationZTextBox.TextChanged += new System.EventHandler(this.Rotation_Update);
             // 
             // TranslationZTextBox
             // 
@@ -225,10 +226,6 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Transformations";
             // 
-            // cubeFormBindingSource
-            // 
-            this.cubeFormBindingSource.DataSource = typeof(_3DIntroductionProject.UIForm);
-            // 
             // TimeLogLabel
             // 
             this.TimeLogLabel.AutoSize = true;
@@ -238,17 +235,68 @@
             this.TimeLogLabel.TabIndex = 32;
             this.TimeLogLabel.Text = "TimeLogLabel";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(1251, 443);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(75, 13);
+            this.label1.TabIndex = 34;
+            this.label1.Text = "Render Mode:";
+            // 
+            // ChangeColorButton
+            // 
+            this.ChangeColorButton.Location = new System.Drawing.Point(1127, 395);
+            this.ChangeColorButton.Name = "ChangeColorButton";
+            this.ChangeColorButton.Size = new System.Drawing.Size(134, 23);
+            this.ChangeColorButton.TabIndex = 35;
+            this.ChangeColorButton.Text = "ChangeColorButton";
+            this.ChangeColorButton.UseVisualStyleBackColor = true;
+            this.ChangeColorButton.Click += new System.EventHandler(this.ChangeColorButton_Click);
+            // 
+            // ShapeSelectionComboBox
+            // 
+            this.ShapeSelectionComboBox.FormattingEnabled = true;
+            this.ShapeSelectionComboBox.Items.AddRange(new object[] {
+            "Cube",
+            "Cylinder",
+            "Plane",
+            "Light"});
+            this.ShapeSelectionComboBox.Location = new System.Drawing.Point(1088, 491);
+            this.ShapeSelectionComboBox.Name = "ShapeSelectionComboBox";
+            this.ShapeSelectionComboBox.Size = new System.Drawing.Size(121, 21);
+            this.ShapeSelectionComboBox.TabIndex = 36;
+            this.ShapeSelectionComboBox.Text = "Pick an object to create";
+            // 
+            // ObjectSpawnButton
+            // 
+            this.ObjectSpawnButton.Location = new System.Drawing.Point(1110, 527);
+            this.ObjectSpawnButton.Name = "ObjectSpawnButton";
+            this.ObjectSpawnButton.Size = new System.Drawing.Size(99, 23);
+            this.ObjectSpawnButton.TabIndex = 37;
+            this.ObjectSpawnButton.Text = "Make Object";
+            this.ObjectSpawnButton.UseVisualStyleBackColor = true;
+            this.ObjectSpawnButton.Click += new System.EventHandler(this.ObjectSpawnButton_Click);
+            // 
+            // cubeFormBindingSource
+            // 
+            this.cubeFormBindingSource.DataSource = typeof(_3DIntroductionProject.UIForm);
+            // 
             // UIForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1352, 684);
+            this.Controls.Add(this.ObjectSpawnButton);
+            this.Controls.Add(this.ShapeSelectionComboBox);
+            this.Controls.Add(this.ChangeColorButton);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.TimeLogLabel);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.ObjectDataGridView);
             this.Controls.Add(this.AverageFPSLabel);
-            this.Controls.Add(this.TimerButton);
             this.Controls.Add(this.GraphicsDisplayPictureBox);
+            this.KeyPreview = true;
             this.Name = "UIForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "3D Visualizer";
@@ -271,8 +319,6 @@
         #endregion
 
         private System.Windows.Forms.PictureBox GraphicsDisplayPictureBox;
-        private System.Windows.Forms.Button TimerButton;
-        private System.Windows.Forms.Timer ClockTimer;
         private System.Windows.Forms.Label AverageFPSLabel;
         private System.Windows.Forms.BindingSource cubeFormBindingSource;
         private System.Windows.Forms.DataGridView ObjectDataGridView;
@@ -290,6 +336,12 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label TimeLogLabel;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Timer ClockTimer;
+        private System.Windows.Forms.ColorDialog FaceColorDialog;
+        private System.Windows.Forms.Button ChangeColorButton;
+        private System.Windows.Forms.ComboBox ShapeSelectionComboBox;
+        private System.Windows.Forms.Button ObjectSpawnButton;
     }
 }
 

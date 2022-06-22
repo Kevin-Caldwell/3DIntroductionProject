@@ -11,13 +11,8 @@ namespace _3DIntroductionProject
     /// </summary>
     internal class ObjectPackager
     {
-        private ObjectManager _objectManager;
-        private Camera ViewportCamera;
-
-        public ObjectPackager(ObjectManager objectManager)
+        public ObjectPackager()
         {
-            _objectManager = objectManager;
-            ViewportCamera = objectManager.ViewportCamera;
         }
 
         public List<object> PrepareRenderingQueue(List<Object> objectList)

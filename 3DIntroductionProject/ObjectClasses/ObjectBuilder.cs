@@ -67,36 +67,39 @@ namespace _3DIntroductionProject
 
             cube.Edges = edges;
 
-            List<Face> faces = new List<Face>();
-            faces.Add(new Face(cube.TransformedVertices[0],
+            List<Face> faces = new List<Face>
+            {
+
+                new Face(cube.TransformedVertices[0],
                 cube.TransformedVertices[1],
                 cube.TransformedVertices[3],
-                cube.TransformedVertices[2]));
+                cube.TransformedVertices[2]),
 
-            faces.Add(new Face(cube.TransformedVertices[0],
+                new Face(cube.TransformedVertices[4],
+                cube.TransformedVertices[5],
                 cube.TransformedVertices[1],
-                cube.TransformedVertices[5], 
-                cube.TransformedVertices[4]));
+                cube.TransformedVertices[0]),
 
-            faces.Add(new Face(cube.TransformedVertices[0],
-                cube.TransformedVertices[2], 
-                cube.TransformedVertices[6], 
-                cube.TransformedVertices[4]));
+                new Face(cube.TransformedVertices[0],
+                cube.TransformedVertices[2],
+                cube.TransformedVertices[6],
+                cube.TransformedVertices[4]),
 
-            faces.Add(new Face(cube.TransformedVertices[1],
+                new Face(cube.TransformedVertices[5],
+                cube.TransformedVertices[7],
                 cube.TransformedVertices[3],
-                cube.TransformedVertices[7], 
-                cube.TransformedVertices[5]));
+                cube.TransformedVertices[1]),
 
-            faces.Add(new Face(cube.TransformedVertices[2], 
-                cube.TransformedVertices[3], 
-                cube.TransformedVertices[7], 
-                cube.TransformedVertices[6]));
+                new Face(cube.TransformedVertices[2],
+                cube.TransformedVertices[3],
+                cube.TransformedVertices[7],
+                cube.TransformedVertices[6]),
 
-            faces.Add(new Face(cube.TransformedVertices[6], 
-                cube.TransformedVertices[4], 
-                cube.TransformedVertices[5], 
-                cube.TransformedVertices[7]));
+                new Face(cube.TransformedVertices[7],
+                cube.TransformedVertices[5],
+                cube.TransformedVertices[4],
+                cube.TransformedVertices[6])
+            };
 
             cube.Faces = faces;
 
@@ -169,11 +172,10 @@ namespace _3DIntroductionProject
                     cylinder.TransformedVertices[subdivisions + i]
                     ));
             }
-
-            faces.Add(new Face(cylinder.TransformedVertices[subdivisions],
-                cylinder.TransformedVertices[0],
+            faces.Add(new Face(cylinder.TransformedVertices[2 * subdivisions - 1],
                 cylinder.TransformedVertices[subdivisions - 1],
-                cylinder.TransformedVertices[2 * subdivisions - 1]));
+                cylinder.TransformedVertices[0],
+                cylinder.TransformedVertices[subdivisions]));
 
             cylinder.Edges = edges;
             cylinder.Faces = faces;
@@ -182,16 +184,15 @@ namespace _3DIntroductionProject
         }
         public static Object CreatePlane(double size)
         {
-            Object plane = new Object();
-            plane.Name = "Plane";
+            Object plane = new Object { Name = "Plane" };
 
-            List<Vertex> vertices = new List<Vertex>();
-
-
-            vertices.Add(new Vertex(size / 2, size / 2, 0));
-            vertices.Add(new Vertex(-size / 2, size / 2, 0));
-            vertices.Add(new Vertex(-size / 2, -size / 2, 0));
-            vertices.Add(new Vertex(size / 2, -size / 2, 0));
+            List<Vertex> vertices = new List<Vertex>
+            {
+                new Vertex(size / 2, size / 2, 0),
+                new Vertex(-size / 2, size / 2, 0),
+                new Vertex(-size / 2, -size / 2, 0),
+                new Vertex(size / 2, -size / 2, 0)
+            };
 
             plane.Vertices = vertices;
 
@@ -209,5 +210,9 @@ namespace _3DIntroductionProject
 
             return plane;
         }
+/*        public static Object CreateSphere(double radius, int vSubdiv, int hSubdiv)
+        {
+
+        }*/
     }
 }

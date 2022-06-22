@@ -20,7 +20,25 @@ namespace _3DIntroductionProject
         public double Y { get { return _y; } set { _y = value; } }
         public double Z { get { return _z; } set { _z = value; } }
 
+        public static Vector3 operator +(Vector3 left, Vector3 right) 
+        {
+                return new Vector3(left._x + right._x, left._y + right._y, left._z + right._z);
+        }
 
+        public static Vector3 operator -(Vector3 left, Vector3 right)
+        {
+            return new Vector3(left.X - right._x, left.Y - right._y, left.Z - right.Z);
+        }
+
+        public static Vector3 operator *(Vector3 v, double k)
+        {
+            return new Vector3(v._x * k, v._y * k, v._z * k);
+        }
+
+        public static Vector3 operator /(Vector3 v, double k)
+        {
+            return new Vector3(v._x / k, v._y / k, v._z / k);
+        }
 
         #endregion
 
@@ -86,7 +104,7 @@ namespace _3DIntroductionProject
         }
         public Vector3 CrossProduct(Vector3 v)
         {
-            return new Vector3(_y * v.Z + _z * v.Y, _x * v.Z + _x * v.Y, _x * v.Y + _y * v.X);
+            return new Vector3(_y * v.Z - _z * v.Y, _z * v.X - _x * v.Z, _x * v.Y - _y * v.X);
         }
         public Vector3 RotateX(double thetaRadians)
         {
